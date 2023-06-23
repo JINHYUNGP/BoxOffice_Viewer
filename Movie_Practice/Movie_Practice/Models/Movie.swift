@@ -15,6 +15,7 @@ struct Movie {
     var thumbnailImage: String = ""
     var discription: String = ""
     var review: String = ""
+    var rank: Int = 0
     var selectedThumbnail: String? {
             let thumbnailLinks = thumbnailImage.components(separatedBy: "|")
             return thumbnailLinks[0]
@@ -23,6 +24,7 @@ struct Movie {
 extension Movie {
     init(dailyBoxOffice: DailyBoxOfficeList) {
         self.title = dailyBoxOffice.movieNm
+        self.rank = Int(dailyBoxOffice.rank) ?? 0
     }
 }
 
@@ -46,13 +48,13 @@ class MovieManager {
     }
     
     func fetchMovies(completion: @escaping ([Movie]) -> Void) {
-        
         fetchBoxOfficeData { result in
             switch result {
             case .success(let boxOfficeResult):
                 var resultMovies: [Movie] = []
                 let movies = boxOfficeResult.map { dailyBoxOffice in
-                    Movie(dailyBoxOffice: dailyBoxOffice)
+                    var movie = Movie(dailyBoxOffice: dailyBoxOffice)
+                    return movie
                 }
                 // 영화 배열을 돌면서 fetchKMDBData 함수를 호출하여 thumbnail 채우기
                 let dispatchGroup = DispatchGroup()
@@ -62,12 +64,13 @@ class MovieManager {
                     var movie = movies[index]
                     self.fetchKMDBData(with: movie.title) { fetchedMovie in
                         if let fetchedMovie = fetchedMovie {
-                            print("fetchedMovie", fetchedMovie)
-                            resultMovies.append(fetchedMovie)
+                            movie.thumbnailImage = fetchedMovie.thumbnailImage
+                            resultMovies.append(movie)
                         }
                         dispatchGroup.leave()
                     }
                 }
+                
                 dispatchGroup.notify(queue: .main) {
                     // 모든 fetchKMDBData 호출이 완료된 후에 completion을 호출하여 movies 배열 반환
                     completion(resultMovies)
@@ -79,7 +82,6 @@ class MovieManager {
             }
         }
     }
-    
     func fetchBoxOfficeData(completion: @escaping (Result<[DailyBoxOfficeList], Error>) -> Void) {
         let urlString = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=\(key)&targetDt=\(targetDt)"
         guard let url = URL(string: urlString) else {

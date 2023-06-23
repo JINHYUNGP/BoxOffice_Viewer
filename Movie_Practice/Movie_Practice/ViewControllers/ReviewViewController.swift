@@ -78,7 +78,7 @@ extension ReviewViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         // 섹션 제목 반환
-        return "현재 상영작"
+        return "리뷰한 영화"
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

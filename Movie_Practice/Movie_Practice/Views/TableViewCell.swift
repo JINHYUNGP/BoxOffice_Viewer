@@ -61,6 +61,11 @@ class TableViewCell: UITableViewCell {
                 }
             }
         } 
+        if let thumbnail = movie.selectedThumbnail {
+            if thumbnail.isEmpty {
+                thumbnailImageView.image = UIImage(systemName: "film")
+            }
+        }
         let thumbnailWidth: CGFloat = 120 // 이미지의 고정된 너비
         let thumbnailHeight: CGFloat = 160 // 이미지의 고정된 높이
 

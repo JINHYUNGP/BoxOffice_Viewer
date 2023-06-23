@@ -23,9 +23,11 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         movieManager.fetchMovies { [weak self] movies in
-            self?.dataSource = movies
+            let sortedMovies = movies.sorted { $0.rank < $1.rank }
+            self?.dataSource = sortedMovies
+
             // 데이터를 받은 후에 UI 업데이트를 수행하거나 다른 작업을 수행할 수 있습니다.
             DispatchQueue.main.async {
                 self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
@@ -85,7 +87,7 @@ extension HomeViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 //
 extension HomeViewController: UITableViewDelegate {
-    
+
     //        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     //            let movie = dataSource[indexPath.row]
     //            let detailViewController = DetailViewController(movie: movie)
