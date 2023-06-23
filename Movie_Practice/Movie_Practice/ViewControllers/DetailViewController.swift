@@ -21,8 +21,11 @@ class DetailViewController: UIViewController {
         
     }()
     
+    
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
+        let defaultImage = UIImage(named: "default_thumbnail")
+        imageView.image = defaultImage
         let thumbnailWidth: CGFloat = 120 // 이미지의 고정된 너비
         let thumbnailHeight: CGFloat = 160 // 이미지의 고정된 높이
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -36,7 +39,6 @@ class DetailViewController: UIViewController {
         label.textColor = .black
         label.numberOfLines = 0
         return label
-        
     }()
     
     let reviewLabel: UILabel = {
@@ -84,15 +86,23 @@ class DetailViewController: UIViewController {
     
     func configure() {
         titleLabel.text = movie.title
-        if let url = URL(string: movie.selectedThumbnail ?? "") {
-            DispatchQueue.global().async {
-                if let data = try? Data(contentsOf: url) {
+        if let thumbnailURLString = movie.selectedThumbnail, let thumbnailURL = URL(string: thumbnailURLString) {
+            URLSession.shared.dataTask(with: thumbnailURL) { (data, response, error) in
+                if let error = error {
+                    print("Error downloading thumbnail image: \(error.localizedDescription)")
+                    return
+                }
+                
+                if let data = data, let image = UIImage(data: data) {
                     DispatchQueue.main.async {
-                        let image = UIImage(data: data)
                         self.thumbnailImageView.image = image
                     }
                 }
-            }
+            }.resume()
+        } else {
+            // 기본 이미지 설정
+            let defaultImage = UIImage(systemName: "film")
+            thumbnailImageView.image = defaultImage
         }
         discriptionLable.text = movie.discription
         reviewTextView.textContainer.maximumNumberOfLines = 0
