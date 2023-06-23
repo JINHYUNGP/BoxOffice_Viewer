@@ -23,14 +23,14 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         movieManager.fetchMovies { [weak self] movies in
-                    self?.dataSource = movies
-                    // 데이터를 받은 후에 UI 업데이트를 수행하거나 다른 작업을 수행할 수 있습니다.
-                    DispatchQueue.main.async {
-                        self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
-                    }
-                }
+            self?.dataSource = movies
+            // 데이터를 받은 후에 UI 업데이트를 수행하거나 다른 작업을 수행할 수 있습니다.
+            DispatchQueue.main.async {
+                self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
+            }
+        }
         self.tableView.delegate = self
         
         setUI()
@@ -86,12 +86,32 @@ extension HomeViewController: UITableViewDataSource {
 //
 extension HomeViewController: UITableViewDelegate {
     
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let movie = dataSource[indexPath.row]
-            let detailViewController = DetailViewController(movie: movie)
-            detailViewController.modalPresentationStyle = .popover
-            present(detailViewController, animated: true, completion: nil)
+    //        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    //            let movie = dataSource[indexPath.row]
+    //            let detailViewController = DetailViewController(movie: movie)
+    //            detailViewController.modalPresentationStyle = .popover
+    //            present(detailViewController, animated: true, completion: nil)
+    //        }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = dataSource[indexPath.row]
+        let modalVC = CustomModalViewController(movie: movie)
+        // 모달 스타일 설정
+        modalVC.modalPresentationStyle = .overFullScreen
+        modalVC.modalTransitionStyle = .crossDissolve
+        
+        // 배경 터치로 모달 닫기 설정
+        modalVC.isModalInPresentation = true
+        
+        modalVC.didDismissModal = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
         }
+        
+        present(modalVC, animated: false, completion: nil)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 180
     }
