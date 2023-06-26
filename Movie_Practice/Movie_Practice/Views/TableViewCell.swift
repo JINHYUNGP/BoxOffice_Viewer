@@ -59,7 +59,7 @@ class TableViewCell: UITableViewCell {
                     }
                 }
             }
-        } 
+        }
         if let thumbnail = movie.selectedThumbnail {
             if thumbnail.isEmpty {
                 thumbnailImageView.image = UIImage(systemName: "film")
