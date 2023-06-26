@@ -6,11 +6,13 @@
 //
 
 import UIKit
+import CoreData
 
 class DetailViewController: UIViewController {
     
     var movie: Movie
     let movieManager = MovieManager.shared
+    var container: NSPersistentContainer!
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -79,6 +81,10 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        self.container = appDelegate.persistentContainer
+        let entity = NSEntityDescription.entity(forEntityName: "Movie", in: self.container.viewContext)
+        
         configure()
         setAutoLayOut()
       
@@ -104,7 +110,7 @@ class DetailViewController: UIViewController {
             let defaultImage = UIImage(systemName: "film")
             thumbnailImageView.image = defaultImage
         }
-        discriptionLable.text = movie.discription
+        discriptionLable.text = movie.description
         reviewTextView.textContainer.maximumNumberOfLines = 0
         reviewTextView.textContainer.lineFragmentPadding = 0
 
@@ -150,6 +156,25 @@ class DetailViewController: UIViewController {
         var tempMovie = self.movie
         tempMovie.review = reviewTextView.text
         movieManager.reviewedMovies.append(tempMovie)
+        
+        let context = container.viewContext
+        let movie = MovieCoreDataModel(context: context)
+        movie.title = tempMovie.title
+        movie.actor = tempMovie.actor
+        movie.movieDescription = tempMovie.description
+        movie.rank = Int32(tempMovie.rank)
+        movie.rating = tempMovie.rating
+        movie.review = tempMovie.review
+        movie.thumbnailImage = tempMovie.thumbnailImage
+        movie.director = tempMovie.director
+        
+        do {
+            try context.save()
+            print("영화 '괴물'이 CoreData에 저장되었습니다.")
+        } catch {
+            print("데이터 저장 실패: \(error)")
+        }
+        
         self.dismiss(animated: true, completion: nil)
     }
 

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class HomeViewController: UIViewController {
     
@@ -23,7 +24,7 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         movieManager.fetchMovies { [weak self] movies in
             let sortedMovies = movies.sorted { $0.rank < $1.rank }
             self?.dataSource = sortedMovies

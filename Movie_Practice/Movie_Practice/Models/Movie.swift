@@ -13,7 +13,7 @@ struct Movie {
     var actor: String = ""
     var rating: Double = 0.0
     var thumbnailImage: String = ""
-    var discription: String = ""
+    var description: String = ""
     var review: String = ""
     var rank: Int = 0
     var selectedThumbnail: String? {
@@ -164,7 +164,7 @@ class MovieManager {
                 }
                 
                 for moviePlot in movieData.plots.plot {
-                    movie.discription += moviePlot.plotText
+                    movie.description += moviePlot.plotText
                 }
                 
                 movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0
@@ -244,7 +244,7 @@ class MovieManager {
                     }
                     
                     for moviePlot in movieData.plots.plot {
-                        movie.discription += moviePlot.plotText
+                        movie.description += moviePlot.plotText
                     }
                     
                     movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0

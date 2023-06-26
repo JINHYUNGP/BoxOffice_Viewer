@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import CoreData
 
 class ReviewViewController: UIViewController {
     
     let movieManager = MovieManager.shared
+    var container:NSPersistentContainer!
     var dataSource: [Movie] = []
     
     lazy var tableView: UITableView = {
@@ -23,6 +25,8 @@ class ReviewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        self.container = appDelegate.persistentContainer
         
 //        dataSource = movieManager.reviewedMovies
         self.tableView.delegate = self
