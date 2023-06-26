@@ -18,7 +18,6 @@ class TableViewCell: UITableViewCell {
     
     // 영화 데이터를 설정하는 메서드
     func configure(with movie: Movie) {
-        print(movie)
         titleLabel.text = movie.title
         directorLabel.text = "감독: " + movie.director
         actorLabel.text = "배우: " + movie.actor

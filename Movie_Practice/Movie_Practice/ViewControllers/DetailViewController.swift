@@ -12,22 +12,47 @@ class DetailViewController: UIViewController {
     var movie: Movie
     let movieManager = MovieManager.shared
     
+    var closeButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.systemPink, for: .normal)
+        button.setTitle("닫기", for: .normal)
+//        button.addTarget(self, action: #selector(), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    let reviewTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "리뷰 작성"
+        label.font = .systemFont(ofSize: 25, weight: .bold)
+        label.textColor = .black
+        return label
+    }()
+    
     let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
         label.textColor = .black
         return label
-        
     }()
     
+    lazy var saveButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.systemPink, for: .normal)
+        button.setTitle("저장", for: .normal)
+        button.addTarget(self, action: #selector(onButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
     
     let thumbnailImageView: UIImageView = {
         let imageView = UIImageView()
         let defaultImage = UIImage(named: "default_thumbnail")
         imageView.image = defaultImage
-        let thumbnailWidth: CGFloat = 120 // 이미지의 고정된 너비
-        let thumbnailHeight: CGFloat = 160 // 이미지의 고정된 높이
+        let thumbnailWidth: CGFloat = 90 // 이미지의 고정된 너비
+        let thumbnailHeight: CGFloat = 120 // 이미지의 고정된 높이
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -58,15 +83,6 @@ class DetailViewController: UIViewController {
         return textView
     }()
     
-    let saveButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = .systemPink
-        button.setTitle("저장하기", for: .normal)
-        button.addTarget(self, action: #selector(onButtonTapped), for: .touchUpInside)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     init(movie: Movie) {
         self.movie = movie
         super.init(nibName: nil, bundle: nil)
@@ -81,7 +97,6 @@ class DetailViewController: UIViewController {
         view.backgroundColor = .white
         configure()
         setAutoLayOut()
-      
     }
     
     func configure() {
@@ -104,23 +119,34 @@ class DetailViewController: UIViewController {
             let defaultImage = UIImage(systemName: "film")
             thumbnailImageView.image = defaultImage
         }
-        discriptionLable.text = movie.discription
+        discriptionLable.text = movie.description
         reviewTextView.textContainer.maximumNumberOfLines = 0
         reviewTextView.textContainer.lineFragmentPadding = 0
 
-        
+        view.addSubview(closeButton)
+        view.addSubview(reviewTitleLabel)
+        view.addSubview(saveButton)
         view.addSubview(titleLabel)
         view.addSubview(thumbnailImageView)
         view.addSubview(discriptionLable)
         view.addSubview(reviewLabel)
         view.addSubview(reviewTextView)
-        view.addSubview(saveButton)
     }
     
     func setAutoLayOut() {
         let guide = view.safeAreaLayoutGuide
         let margin: CGFloat = 10
-        titleLabel.topAnchor.constraint(equalTo: guide.topAnchor ).isActive = true
+        
+        closeButton.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+        closeButton.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
+        
+        reviewTitleLabel.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+        reviewTitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        saveButton.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
+        saveButton.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
+        
+        titleLabel.topAnchor.constraint(equalTo: reviewTitleLabel.bottomAnchor, constant: 10).isActive = true
         titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         thumbnailImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
@@ -141,17 +167,12 @@ class DetailViewController: UIViewController {
         reviewTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         reviewTextView.heightAnchor.constraint(equalToConstant: 200).isActive = true
         
-        saveButton.topAnchor.constraint(equalTo: reviewTextView.bottomAnchor).isActive = true
-        saveButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
     @objc func onButtonTapped(){
-        
         var tempMovie = self.movie
         tempMovie.review = reviewTextView.text
         movieManager.reviewedMovies.append(tempMovie)
         self.dismiss(animated: true, completion: nil)
     }
-
 }
-
