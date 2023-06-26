@@ -26,6 +26,7 @@ class HomeViewController: UIViewController {
     
         movieManager.fetchMovies { [weak self] movies in
             let sortedMovies = movies.sorted { $0.rank < $1.rank }
+
             self?.dataSource = sortedMovies
 
             // 데이터를 받은 후에 UI 업데이트를 수행하거나 다른 작업을 수행할 수 있습니다.
@@ -104,11 +105,9 @@ extension HomeViewController: UITableViewDelegate {
         
         // 배경 터치로 모달 닫기 설정
         modalVC.isModalInPresentation = true
-        
         modalVC.didDismissModal = { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
-        
         present(modalVC, animated: false, completion: nil)
         
         tableView.deselectRow(at: indexPath, animated: true)

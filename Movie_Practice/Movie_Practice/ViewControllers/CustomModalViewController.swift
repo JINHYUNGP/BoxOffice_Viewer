@@ -14,6 +14,7 @@ class CustomModalViewController: UIViewController {
     init(movie: Movie) {
         self.movie = movie
         super.init(nibName: nil, bundle: nil)
+        self.modalView.reviewButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -55,10 +56,16 @@ class CustomModalViewController: UIViewController {
                 }
             }
         }
+        modalView.summaryLabel.text = movie.description
     }
     
     @objc private func backgroundTapped() {
         dismiss(animated: false, completion: nil)
     }
     
+    @objc private func buttonTapped() {
+        let detailVC = DetailViewController(movie: movie)
+        detailVC.modalPresentationStyle = .overFullScreen
+        present(detailVC, animated: false, completion: nil)
+    }
 }

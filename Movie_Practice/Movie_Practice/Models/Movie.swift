@@ -13,7 +13,7 @@ struct Movie {
     var actor: String = ""
     var rating: Double = 0.0
     var thumbnailImage: String = ""
-    var discription: String = ""
+    var description: String = ""
     var review: String = ""
     var rank: Int = 0
     var selectedThumbnail: String? {
@@ -53,7 +53,7 @@ class MovieManager {
             case .success(let boxOfficeResult):
                 var resultMovies: [Movie] = []
                 let movies = boxOfficeResult.map { dailyBoxOffice in
-                    var movie = Movie(dailyBoxOffice: dailyBoxOffice)
+                    let movie = Movie(dailyBoxOffice: dailyBoxOffice)
                     return movie
                 }
                 // 영화 배열을 돌면서 fetchKMDBData 함수를 호출하여 thumbnail 채우기
@@ -65,6 +65,9 @@ class MovieManager {
                     self.fetchKMDBData(with: movie.title) { fetchedMovie in
                         if let fetchedMovie = fetchedMovie {
                             movie.thumbnailImage = fetchedMovie.thumbnailImage
+                            movie.actor = fetchedMovie.actor
+                            movie.director = fetchedMovie.director
+                            movie.description = fetchedMovie.description
                             resultMovies.append(movie)
                         }
                         dispatchGroup.leave()
@@ -164,9 +167,9 @@ class MovieManager {
                 }
                 
                 for moviePlot in movieData.plots.plot {
-                    movie.discription += moviePlot.plotText
+                    movie.description += moviePlot.plotText
                 }
-                
+
                 movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0
                 movie.thumbnailImage = movieData.posters
                 
@@ -175,6 +178,7 @@ class MovieManager {
                     self.updateUI(with: kmdb)
                     completion(movie)
                 }
+                
             } catch {
                 print("Error parsing JSON: \(error.localizedDescription)")
                 completion(nil)
@@ -225,6 +229,7 @@ class MovieManager {
                 
                 var movies: [Movie] = []
                 for movieData in kmdb.data.first?.result ?? [] {
+                    
                     var movie = Movie()
                     let title = movieData.title
                     let pattern = " !HS | !HE "
@@ -233,6 +238,7 @@ class MovieManager {
                     if let firstNonWhitespaceIndex = cleanedTitle.firstIndex(where: { !$0.isWhitespace }) {
                         cleanedTitle = String(cleanedTitle[firstNonWhitespaceIndex...])
                     }
+                    
                     movie.title = cleanedTitle
                     
                     for movieActor in movieData.actors.actor {
@@ -244,8 +250,9 @@ class MovieManager {
                     }
                     
                     for moviePlot in movieData.plots.plot {
-                        movie.discription += moviePlot.plotText
+                        movie.description += moviePlot.plotText
                     }
+                    print(movie.description)
                     
                     movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0
                     movie.thumbnailImage = movieData.posters
