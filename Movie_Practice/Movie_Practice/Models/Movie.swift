@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 struct Movie {
     var title: String = ""
@@ -41,10 +42,10 @@ class MovieManager {
         return dateFormatter.string(from: yesterday ?? Date())
     }()
     var movies: [DailyBoxOfficeList] = []
-    var reviewedMovies: [Movie] = []
-    
-    
+//    var reviewedMovies: [Movie] = []
+//
     private init() {
+        
     }
     
     func fetchMovies(completion: @escaping ([Movie]) -> Void) {

@@ -11,6 +11,7 @@ import CoreData
 class ReviewViewController: UIViewController {
     
     let movieManager = MovieManager.shared
+    let localDataManager = LocalDataManager.shared
     var container:NSPersistentContainer!
     var dataSource: [Movie] = []
     
@@ -26,7 +27,7 @@ class ReviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        self.container = appDelegate.persistentContainer
+        
         
 //        dataSource = movieManager.reviewedMovies
         self.tableView.delegate = self
@@ -58,8 +59,7 @@ class ReviewViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
     }
     
-    
-    
+
     /*
      // MARK: - Navigation
      
@@ -86,7 +86,7 @@ extension ReviewViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return movieManager.reviewedMovies.count
+        return localDataManager.reviewedMovies.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -94,7 +94,7 @@ extension ReviewViewController: UITableViewDataSource {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)
-        cell.configure(with: movieManager.reviewedMovies[indexPath.row])
+        cell.configure(with: localDataManager.reviewedMovies[indexPath.row])
         return cell
     }
 }
@@ -104,7 +104,7 @@ extension ReviewViewController: UITableViewDataSource {
 extension ReviewViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = movieManager.reviewedMovies[indexPath.row]
+        let movie = localDataManager.reviewedMovies[indexPath.row]
         let detailViewController = DetailViewController(movie: movie)
         detailViewController.modalPresentationStyle = .popover
         present(detailViewController, animated: true, completion: nil)

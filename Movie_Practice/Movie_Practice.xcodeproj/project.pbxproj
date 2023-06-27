@@ -23,6 +23,7 @@
 		F330C5A62A0B7FFA004E2B95 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F330C5A52A0B7FFA004E2B95 /* ReviewViewController.swift */; };
 		F36572C42A1943DF007630E2 /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36572C32A1943DF007630E2 /* BoxOffice.swift */; };
 		F36572C62A194418007630E2 /* KMDB.swift in Sources */ = {isa = PBXBuildFile; fileRef = F36572C52A194418007630E2 /* KMDB.swift */; };
+		F38152612A4AB7F900DAFE53 /* LocalDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38152602A4AB7F900DAFE53 /* LocalDataManager.swift */; };
 		F3973BD72A135DDB00D9ED2A /* StarRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3973BD62A135DDB00D9ED2A /* StarRatingView.swift */; };
 		F3A18C542A109DD100C3EEE1 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A18C532A109DD100C3EEE1 /* TableViewCell.swift */; };
 		F3A18C562A10A2B900C3EEE1 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A18C552A10A2B900C3EEE1 /* DetailViewController.swift */; };
@@ -69,6 +70,7 @@
 		F330C5A52A0B7FFA004E2B95 /* ReviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		F36572C32A1943DF007630E2 /* BoxOffice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOffice.swift; sourceTree = "<group>"; };
 		F36572C52A194418007630E2 /* KMDB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KMDB.swift; sourceTree = "<group>"; };
+		F38152602A4AB7F900DAFE53 /* LocalDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDataManager.swift; sourceTree = "<group>"; };
 		F3973BD62A135DDB00D9ED2A /* StarRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRatingView.swift; sourceTree = "<group>"; };
 		F3A18C532A109DD100C3EEE1 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		F3A18C552A10A2B900C3EEE1 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				F330C59D2A0B7DFB004E2B95 /* Movie.swift */,
 				F36572C32A1943DF007630E2 /* BoxOffice.swift */,
 				F36572C52A194418007630E2 /* KMDB.swift */,
+				F38152602A4AB7F900DAFE53 /* LocalDataManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -339,6 +342,7 @@
 				C54B54CC2A45A39600521563 /* CustomModalView.swift in Sources */,
 				F330C5702A0B70DC004E2B95 /* ViewController.swift in Sources */,
 				F3A57C722A4984E4008248DE /* MovieCoreDataModel+CoreDataClass.swift in Sources */,
+				F38152612A4AB7F900DAFE53 /* LocalDataManager.swift in Sources */,
 				F36572C62A194418007630E2 /* KMDB.swift in Sources */,
 				F3A57C692A496E5D008248DE /* MovieCoreDataModel.xcdatamodeld in Sources */,
 				F330C56C2A0B70DC004E2B95 /* AppDelegate.swift in Sources */,
