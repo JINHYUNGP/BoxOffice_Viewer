@@ -14,11 +14,11 @@ class DetailViewController: UIViewController {
     let movieManager = MovieManager.shared
     let localDataManager = LocalDataManager.shared
     
-    var closeButton: UIButton = {
+    lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.systemPink, for: .normal)
         button.setTitle("닫기", for: .normal)
-//        button.addTarget(self, action: #selector(), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onCloseButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -32,19 +32,11 @@ class DetailViewController: UIViewController {
         return label
     }()
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.textColor = .black
-        return label
-    }()
-    
     lazy var saveButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.systemPink, for: .normal)
         button.setTitle("저장", for: .normal)
-        button.addTarget(self, action: #selector(onButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onSaveButtonTapped), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -53,16 +45,52 @@ class DetailViewController: UIViewController {
         let imageView = UIImageView()
         let defaultImage = UIImage(named: "default_thumbnail")
         imageView.image = defaultImage
-        let thumbnailWidth: CGFloat = 90 // 이미지의 고정된 너비
-        let thumbnailHeight: CGFloat = 120 // 이미지의 고정된 높이
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    let discriptionLable: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .systemFont(ofSize: 20, weight: .regular)
+        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.numberOfLines = 2
+        label.textColor = .black
+        return label
+    }()
+    
+    let directorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "감독: "
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .black
+        return label
+    }()
+    
+    let actorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "배우: "
+        label.font = .systemFont(ofSize: 15)
+        label.numberOfLines = 3
+        label.textColor = .black
+        return label
+    }()
+    
+    let descriptionTitleLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .black
+        label.text = "줄거리"
+        return label
+        
+    }()
+    
+    let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 15, weight: .regular)
         label.textColor = .black
         label.numberOfLines = 0
         return label
@@ -85,8 +113,23 @@ class DetailViewController: UIViewController {
         return textView
     }()
     
+    let infoStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 10
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
+    let labelStackView: UIView = {
+        let stack = UIView()
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
     init(movie: Movie) {
         self.movie = movie
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -126,16 +169,27 @@ class DetailViewController: UIViewController {
             let defaultImage = UIImage(systemName: "film")
             thumbnailImageView.image = defaultImage
         }
-        discriptionLable.text = movie.description
+        descriptionLabel.text = movie.description
         reviewTextView.textContainer.maximumNumberOfLines = 0
         reviewTextView.textContainer.lineFragmentPadding = 0
-
+        
+        directorLabel.text! += movie.director
+        actorLabel.text! += movie.actor
+        
         view.addSubview(closeButton)
         view.addSubview(reviewTitleLabel)
         view.addSubview(saveButton)
-        view.addSubview(titleLabel)
-        view.addSubview(thumbnailImageView)
-        view.addSubview(discriptionLable)
+        
+        view.addSubview(infoStackView)
+        infoStackView.addArrangedSubview(thumbnailImageView)
+        infoStackView.addArrangedSubview(labelStackView)
+        
+        labelStackView.addSubview(titleLabel)
+        labelStackView.addSubview(directorLabel)
+        labelStackView.addSubview(actorLabel)
+        
+        view.addSubview(descriptionTitleLabel)
+        view.addSubview(descriptionLabel)
         view.addSubview(reviewLabel)
         view.addSubview(reviewTextView)
     }
@@ -153,18 +207,35 @@ class DetailViewController: UIViewController {
         saveButton.topAnchor.constraint(equalTo: guide.topAnchor).isActive = true
         saveButton.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
         
-        titleLabel.topAnchor.constraint(equalTo: reviewTitleLabel.bottomAnchor, constant: 10).isActive = true
-        titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        infoStackView.topAnchor.constraint(equalTo: reviewTitleLabel.bottomAnchor, constant: 20).isActive = true
+        infoStackView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
+        infoStackView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
+        infoStackView.heightAnchor.constraint(equalToConstant: 150).isActive = true
         
-        thumbnailImageView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
-        thumbnailImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 1.25).isActive = true
         
-        discriptionLable.topAnchor.constraint(equalTo: thumbnailImageView.bottomAnchor).isActive = true
-        discriptionLable.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        discriptionLable.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
-        discriptionLable.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: margin).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: labelStackView.topAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
-        reviewLabel.topAnchor.constraint(equalTo: discriptionLable.bottomAnchor).isActive = true
+        directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
+        directorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
+        directorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
+        
+        actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 10).isActive = true
+        actorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
+        actorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
+        
+        descriptionTitleLabel.topAnchor.constraint(equalTo: infoStackView.bottomAnchor, constant: 20).isActive = true
+        descriptionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
+        descriptionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
+        
+        descriptionLabel.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 10).isActive = true
+        descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
+        descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
+        
+        reviewLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 20).isActive = true
         reviewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         
@@ -176,10 +247,14 @@ class DetailViewController: UIViewController {
         
     }
     
-    @objc func onButtonTapped(){
+    @objc func onSaveButtonTapped() {
         var tempMovie = self.movie
         tempMovie.review = reviewTextView.text
         localDataManager.saveMovieContext(with: tempMovie)        
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func onCloseButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
 }
