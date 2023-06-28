@@ -87,6 +87,23 @@ extension SearchViewController: UITableViewDataSource {
         cell.configure(with: movies[indexPath.row])
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let movie = movies[indexPath.row]
+        let modalVC = CustomModalViewController(movie: movie)
+        // 모달 스타일 설정
+        modalVC.modalPresentationStyle = .overFullScreen
+        modalVC.modalTransitionStyle = .crossDissolve
+        
+        // 배경 터치로 모달 닫기 설정
+        modalVC.isModalInPresentation = true
+        modalVC.didDismissModal = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+        present(modalVC, animated: false, completion: nil)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 }
 
 extension SearchViewController: UISearchResultsUpdating {
