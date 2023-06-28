@@ -53,7 +53,7 @@ class DetailViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 20, weight: .semibold)
-        label.numberOfLines = 2
+        label.numberOfLines = 3
         label.textColor = .black
         return label
     }()
@@ -109,7 +109,11 @@ class DetailViewController: UIViewController {
     lazy var reviewTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.textContainer.maximumNumberOfLines = 0
+        textView.textContainer.lineFragmentPadding = 0
         textView.text = movie.review
+        textView.layer.borderWidth = 1.0
+        textView.layer.borderColor = UIColor.gray.cgColor
         return textView
     }()
     
@@ -169,10 +173,8 @@ class DetailViewController: UIViewController {
             let defaultImage = UIImage(systemName: "film")
             thumbnailImageView.image = defaultImage
         }
-        descriptionLabel.text = movie.description
-        reviewTextView.textContainer.maximumNumberOfLines = 0
-        reviewTextView.textContainer.lineFragmentPadding = 0
         
+        descriptionLabel.text = movie.description
         directorLabel.text! += movie.director
         actorLabel.text! += movie.actor
         
@@ -239,11 +241,10 @@ class DetailViewController: UIViewController {
         reviewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         
-        reviewTextView.topAnchor.constraint(equalTo: reviewLabel.bottomAnchor).isActive = true
-        reviewTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        reviewTextView.topAnchor.constraint(equalTo: reviewLabel.bottomAnchor, constant:  10).isActive = true
         reviewTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
-        reviewTextView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        reviewTextView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -margin).isActive = true
         
     }
     
