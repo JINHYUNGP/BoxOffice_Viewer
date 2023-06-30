@@ -8,8 +8,7 @@
 import UIKit
 import CoreData
 
-class DetailViewController: UIViewController {
-    
+class DetailViewController: UIViewController, StarRatingViewDelegate {
     var movie: Movie
     let movieManager = MovieManager.shared
     let localDataManager = LocalDataManager.shared
@@ -77,6 +76,8 @@ class DetailViewController: UIViewController {
         return label
     }()
     
+    lazy var starView = StarRatingView(frame: CGRect.zero, movie: movie)
+    
     let descriptionTitleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -128,13 +129,15 @@ class DetailViewController: UIViewController {
     let labelStackView: UIView = {
         let stack = UIView()
         stack.translatesAutoresizingMaskIntoConstraints = false
+        stack.clipsToBounds = true
         return stack
     }()
     
+    
     init(movie: Movie) {
         self.movie = movie
-        
         super.init(nibName: nil, bundle: nil)
+        starView.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -189,6 +192,7 @@ class DetailViewController: UIViewController {
         labelStackView.addSubview(titleLabel)
         labelStackView.addSubview(directorLabel)
         labelStackView.addSubview(actorLabel)
+        labelStackView.addSubview(starView)
         
         view.addSubview(descriptionTitleLabel)
         view.addSubview(descriptionLabel)
@@ -212,7 +216,7 @@ class DetailViewController: UIViewController {
         infoStackView.topAnchor.constraint(equalTo: reviewTitleLabel.bottomAnchor, constant: 20).isActive = true
         infoStackView.leadingAnchor.constraint(equalTo: guide.leadingAnchor, constant: 10).isActive = true
         infoStackView.trailingAnchor.constraint(equalTo: guide.trailingAnchor, constant: -10).isActive = true
-        infoStackView.heightAnchor.constraint(equalToConstant: 150).isActive = true
+        infoStackView.heightAnchor.constraint(equalToConstant: 180).isActive = true
         
         thumbnailImageView.heightAnchor.constraint(equalTo: thumbnailImageView.widthAnchor, multiplier: 1.25).isActive = true
         
@@ -227,6 +231,16 @@ class DetailViewController: UIViewController {
         actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 10).isActive = true
         actorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         actorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
+        
+        starView.translatesAutoresizingMaskIntoConstraints = false
+        starView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor, constant: 10).isActive = true
+        starView.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
+        starView.bottomAnchor.constraint(equalTo: labelStackView.bottomAnchor).isActive = true
+        
+        let panGesture = UIPanGestureRecognizer(target: starView, action: #selector(starView.handlePanGesture(_:)))
+        starView.addGestureRecognizer(panGesture)
+        let tapGesture = UITapGestureRecognizer(target: starView, action: #selector(starView.handleTapGesture(_:)))
+        starView.addGestureRecognizer(tapGesture)
         
         descriptionTitleLabel.topAnchor.constraint(equalTo: infoStackView.bottomAnchor, constant: 20).isActive = true
         descriptionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
@@ -245,7 +259,6 @@ class DetailViewController: UIViewController {
         reviewTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         reviewTextView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -margin).isActive = true
-        
     }
     
     @objc func onSaveButtonTapped() {
@@ -258,4 +271,9 @@ class DetailViewController: UIViewController {
     @objc func onCloseButtonTapped() {
         self.dismiss(animated: true, completion: nil)
     }
+    
+    func starRatingView(_ view: StarRatingView, didChangeRating rating: Float) {
+    }
 }
+
+
