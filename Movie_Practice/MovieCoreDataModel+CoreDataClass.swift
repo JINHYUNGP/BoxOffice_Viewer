@@ -2,7 +2,7 @@
 //  MovieCoreDataModel+CoreDataClass.swift
 //  Movie_Practice
 //
-//  Created by 박진형 on 2023/06/26.
+//  Created by 박진형 on 2023/06/30.
 //
 //
 

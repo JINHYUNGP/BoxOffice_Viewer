@@ -12,8 +12,7 @@ class ReviewViewController: UIViewController {
     
     let movieManager = MovieManager.shared
     let localDataManager = LocalDataManager.shared
-    var container:NSPersistentContainer!
-    var dataSource: [Movie] = []
+    lazy var dataSource: [Movie] = localDataManager.reviewedMovies
     
     lazy var tableView: UITableView = {
         let tableView = UITableView()
@@ -26,22 +25,17 @@ class ReviewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         
-        
-//        dataSource = movieManager.reviewedMovies
         self.tableView.delegate = self
-        
+    
         setUI()
         setAutoLayOut()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        dataSource = movieManager.reviewedMovies
-        self.tableView.reloadData() // 테이블 뷰 업데이트 예시
-
-        
+        dataSource = localDataManager.reviewedMovies
+        tableView.reloadData()
     }
     
     func setUI() {
@@ -59,7 +53,7 @@ class ReviewViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
     }
     
-
+    
     /*
      // MARK: - Navigation
      
@@ -86,17 +80,32 @@ extension ReviewViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return localDataManager.reviewedMovies.count
+        return dataSource.count
+        // localdatamanager.reviewedMovie.count
     }
     
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
+        if editingStyle == .delete {
+            let movie = localDataManager.reviewedMovies[indexPath.row]
+            let movieCdToDelete = movie.movieCd
+            localDataManager.deleteData(with: movieCdToDelete)
+            dataSource.remove(at: indexPath.row) // 데이터 소스에서도 삭제된 항목을 제거합니다.
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            print(localDataManager.persistentContainer.viewContext)
+        } else if editingStyle == .insert {
+            
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)
-        cell.configure(with: localDataManager.reviewedMovies[indexPath.row])
+        cell.configure(with: dataSource[indexPath.row])
         return cell
     }
+
 }
 
 // MARK: - UITableViewDelegate

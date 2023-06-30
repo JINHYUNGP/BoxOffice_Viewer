@@ -17,11 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         // 각 탭에 해당하는 뷰 컨트롤러 생성
         let firstViewController = HomeViewController()
-        firstViewController.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house"))
+        firstViewController.tabBarItem = UITabBarItem(title: "홈", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house"))
         let secondViewController = SearchViewController()
-        secondViewController.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house"))
+        secondViewController.tabBarItem = UITabBarItem(title: "검색", image: UIImage(systemName: "magnifyingglass"), selectedImage: UIImage(systemName: "magnifyingglass"))
         let thirdViewController = ReviewViewController()
-        thirdViewController.tabBarItem = UITabBarItem(title: "나의 리뷰", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house"))
+        thirdViewController.tabBarItem = UITabBarItem(title: "나의 리뷰", image: UIImage(systemName: "doc.append"), selectedImage: UIImage(systemName: "doc.append"))
         
         let searchNavigationController = UINavigationController(rootViewController: secondViewController)
         

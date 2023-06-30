@@ -80,8 +80,6 @@ class StarRatingView: UIView {
             }
         }
     }
-    
-    
 }
 
 protocol StarRatingViewDelegate: AnyObject {

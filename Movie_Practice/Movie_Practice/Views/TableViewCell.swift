@@ -19,8 +19,31 @@ class TableViewCell: UITableViewCell {
     // 영화 데이터를 설정하는 메서드
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
-        directorLabel.text = "감독: " + movie.director
-        actorLabel.text = "배우: " + movie.actor
+        
+        var refinedActor: String {
+            var tempActor = movie.actor
+            if !tempActor.isEmpty {
+                tempActor.removeFirst()
+                tempActor.removeFirst()
+            }
+            else {
+                return  ""
+            }
+            return tempActor
+        }
+        var refinedDirector: String {
+            var tempDirector = movie.director
+            if !tempDirector.isEmpty {
+                tempDirector.removeFirst()
+                tempDirector.removeFirst()
+            }
+            else {
+                return  ""
+            }
+            return tempDirector
+        }
+        directorLabel.text = "감독: " + refinedDirector
+        actorLabel.text = "배우: " + refinedActor
         ratingLabel.text = "평점: "
         
 //        let starRatingView: StarRatingView = {

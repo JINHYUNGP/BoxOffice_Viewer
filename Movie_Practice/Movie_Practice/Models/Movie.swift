@@ -17,15 +17,18 @@ struct Movie {
     var description: String = ""
     var review: String = ""
     var rank: Int = 0
+    var movieCd: String = ""
     var selectedThumbnail: String? {
             let thumbnailLinks = thumbnailImage.components(separatedBy: "|")
             return thumbnailLinks[0]
         }
 }
+
 extension Movie {
     init(dailyBoxOffice: DailyBoxOfficeList) {
         self.title = dailyBoxOffice.movieNm
         self.rank = Int(dailyBoxOffice.rank) ?? 0
+        self.movieCd = dailyBoxOffice.movieCd
     }
 }
 
@@ -69,6 +72,7 @@ class MovieManager {
                             movie.actor = fetchedMovie.actor
                             movie.director = fetchedMovie.director
                             movie.description = fetchedMovie.description
+                            movie.movieCd = fetchedMovie.movieCd
                             resultMovies.append(movie)
                         }
                         dispatchGroup.leave()
@@ -160,11 +164,11 @@ class MovieManager {
                 var movie = Movie()
                 movie.title = movieTitle
                 for movieActor in movieData.actors.actor {
-                    movie.actor += movieActor.actorNm
+                    movie.actor += ", " + movieActor.actorNm
                 }
-                
+
                 for movieDirector in movieData.directors.director {
-                    movie.director += movieDirector.directorNm
+                    movie.director += ", " + movieDirector.directorNm
                 }
                 
                 for moviePlot in movieData.plots.plot {
@@ -173,7 +177,6 @@ class MovieManager {
 
                 movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0
                 movie.thumbnailImage = movieData.posters
-                
                 // 데이터를 받은 후에 UI 업데이트를 수행
                 DispatchQueue.main.async {
                     self.updateUI(with: kmdb)

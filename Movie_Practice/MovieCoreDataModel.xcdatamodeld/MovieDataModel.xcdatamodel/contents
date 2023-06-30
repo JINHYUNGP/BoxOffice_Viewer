@@ -3,6 +3,7 @@
     <entity name="MovieCoreDataModel" representedClassName="MovieCoreDataModel" syncable="YES">
         <attribute name="actor" optional="YES" attributeType="String"/>
         <attribute name="director" optional="YES" attributeType="String"/>
+        <attribute name="movieCd" optional="YES" attributeType="String"/>
         <attribute name="movieDescription" optional="YES" attributeType="String"/>
         <attribute name="rank" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="rating" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>

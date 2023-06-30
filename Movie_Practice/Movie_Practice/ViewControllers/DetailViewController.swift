@@ -13,6 +13,7 @@ class DetailViewController: UIViewController {
     var movie: Movie
     let movieManager = MovieManager.shared
     let localDataManager = LocalDataManager.shared
+    lazy var dataSource: [Movie] = localDataManager.reviewedMovies
     
     lazy var closeButton: UIButton = {
         let button = UIButton()
@@ -133,7 +134,6 @@ class DetailViewController: UIViewController {
     
     init(movie: Movie) {
         self.movie = movie
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -144,11 +144,7 @@ class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        
-//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-//        self.container = appDelegate.persistentContainer
-//        let entity = NSEntityDescription.entity(forEntityName: "MovieCoreDataModel", in: self.container.viewContext)
-        
+
         configure()
         setAutoLayOut()
     }
@@ -220,11 +216,11 @@ class DetailViewController: UIViewController {
         titleLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
-        directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10).isActive = true
+        directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: margin).isActive = true
         directorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         directorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
-        actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 10).isActive = true
+        actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: margin).isActive = true
         actorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         actorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
@@ -232,7 +228,7 @@ class DetailViewController: UIViewController {
         descriptionTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         descriptionTitleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         
-        descriptionLabel.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: 10).isActive = true
+        descriptionLabel.topAnchor.constraint(equalTo: descriptionTitleLabel.bottomAnchor, constant: margin).isActive = true
         descriptionLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
@@ -241,7 +237,7 @@ class DetailViewController: UIViewController {
         reviewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         
-        reviewTextView.topAnchor.constraint(equalTo: reviewLabel.bottomAnchor, constant:  10).isActive = true
+        reviewTextView.topAnchor.constraint(equalTo: reviewLabel.bottomAnchor, constant:  margin).isActive = true
         reviewTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin).isActive = true
         reviewTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin).isActive = true
         reviewTextView.bottomAnchor.constraint(equalTo: guide.bottomAnchor, constant: -margin).isActive = true
