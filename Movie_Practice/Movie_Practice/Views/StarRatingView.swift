@@ -88,7 +88,6 @@ class StarRatingView: UIView {
         if newRating != currentRating {
             currentRating = newRating
             movie.rating = Double(newRating)
-            print(movie)
             updateStarImages()
             delegate?.starRatingView(self, didChangeRating: newRating)
         }
