@@ -4,43 +4,72 @@
 //
 //  Created by 박진형 on 2023/05/16.
 //
-
 import UIKit
 
 class StarRatingView: UIView {
-    
+    var movie: Movie
     private let starCount = 5
     private let starSize: CGSize
-    private var currentRating: Float
-    lazy var starImageViews: [UIImageView] = (0..<starCount).map { _ in
-        let starImageView = UIImageView(frame: CGRect(origin: .zero, size: starSize))
-        starImageView.contentMode = .scaleAspectFit
-        addSubview(starImageView)
-        return starImageView
-    }
+    private var currentRating: Float = 0
     weak var delegate: StarRatingViewDelegate?
     
-    init(frame: CGRect, initialRating: Float) {
-        currentRating = initialRating
-        starSize = CGSize(width: frame.width / CGFloat(starCount), height: frame.height)
-        super.init(frame: frame)
-        updateStarImages()
-        setupGestureRecognizers()
-        layoutStarRating()
-    }
+    let starImage: UIImage = UIImage(systemName: "star")!.withTintColor(.systemOrange, renderingMode: .alwaysOriginal)
+    let starFilledImage: UIImage = UIImage(systemName: "star.fill")!.withTintColor(.systemOrange, renderingMode: .alwaysOriginal)
     
-    required init?(coder: NSCoder) {
+    let stackView = UIStackView()
+    
+    var starLabel: UILabel = {
+        let label = UILabel()
+        label.text = "score: "
+        label.font = .systemFont(ofSize: 12)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
+    init(frame: CGRect, movie: Movie) {
+        starSize = CGSize(width: frame.width / CGFloat(starCount), height: frame.height)
+        self.movie = movie
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private func setupGestureRecognizers() {
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        addGestureRecognizer(panGesture)
+
+    private func setupView() {
+        stackView.axis = .horizontal
+        stackView.spacing = 3
+        
+        for _ in 0..<Int(movie.rating) {
+            let imageView = UIImageView(image: starFilledImage)
+            imageView.contentMode = .scaleAspectFit
+            stackView.addArrangedSubview(imageView)
+        }
+        for _ in 0..<5-Int(movie.rating) {
+            let imageView = UIImageView(image: starImage)
+            imageView.contentMode = .scaleAspectFit
+            stackView.addArrangedSubview(imageView)
+        }
+        
+        addSubview(stackView)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            stackView.heightAnchor.constraint(equalToConstant: 30),
+        ])
     }
     
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+    // 드래그 제스처 핸들러
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         let location = gesture.location(in: self)
-        let newRating = calculateRating(from: location)
+        let starWidth = bounds.width / CGFloat(starCount)
+        let selectedStarIndex = Int(location.x / starWidth)
+        let newRating = Float(selectedStarIndex + 1)
         
         if newRating != currentRating {
             currentRating = newRating
@@ -48,35 +77,31 @@ class StarRatingView: UIView {
             delegate?.starRatingView(self, didChangeRating: newRating)
         }
     }
-    private func layoutStarRating() {
-        let starSpacing: CGFloat = 10
-        let starWidth = starSize.width
-        let totalWidth = CGFloat(starCount) * (starWidth + starSpacing)
-        var startX = (bounds.width - totalWidth) / 2
-        if startX < 0 {
-            startX = 0
-        }
-        let y = (bounds.height - starSize.height) / 2
-        
-        for (index, starImageView) in starImageViews.enumerated() {
-            let x = startX + CGFloat(index) * (starWidth + starSpacing)
-            starImageView.frame = CGRect(x: x, y: y, width: starWidth, height: starSize.height)
-            print("Star \(index + 1) X Coordinate: \(x)")
+    
+    // 클릭 제스처 핸들러
+    @objc func handleTapGesture(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: self)
+        let starWidth = bounds.width / CGFloat(starCount)
+        let selectedStarIndex = Int(location.x / starWidth)
+        let newRating = Float(selectedStarIndex + 1)
+
+        if newRating != currentRating {
+            currentRating = newRating
+            movie.rating = Double(newRating)
+            updateStarImages()
+            delegate?.starRatingView(self, didChangeRating: newRating)
         }
     }
     
-    private func calculateRating(from location: CGPoint) -> Float {
-        let clampedLocationX = max(0, min(location.x, frame.width))
-        let newRating = Float(clampedLocationX / frame.width * CGFloat(starCount))
-        return newRating
-    }
-    
+    // 별 이미지 업데이트
     private func updateStarImages() {
-        for (index, starImageView) in starImageViews.enumerated() {
+        for (index, imageView) in stackView.arrangedSubviews.enumerated() {
+            guard let starImageView = imageView as? UIImageView else { continue }
+            
             if Float(index) < currentRating {
-                starImageView.image = UIImage(systemName: "star.fill")
+                starImageView.image = starFilledImage
             } else {
-                starImageView.image = UIImage(systemName: "star")
+                starImageView.image = starImage
             }
         }
     }

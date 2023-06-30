@@ -70,6 +70,7 @@ class CustomModalView: UIView {
         addSubview(closeButton)
         addSubview(movieImage)
         addSubview(summaryLabel)
+//        addSubview(starView!)
         addSubview(reviewButton)
     }
     private func setupView() {
@@ -90,6 +91,8 @@ class CustomModalView: UIView {
         summaryLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         summaryLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         summaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
+        
+//        starView?.topAnchor.constraint(equalTo: summaryLabel.bottomAnchor, constant: 10).isActive = true
 
         reviewButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         reviewButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
