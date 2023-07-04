@@ -11,6 +11,7 @@ import CoreData
 class HomeViewController: UIViewController {
     
     let movieManager = MovieManager.shared
+    let localDataManager = LocalDataManager.shared
     var dataSource: [Movie] = []
     
     lazy var tableView: UITableView = {
@@ -25,20 +26,12 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        movieManager.fetchMovies { [weak self] movies in
-            let sortedMovies = movies.sorted { $0.rank < $1.rank }
-
-            self?.dataSource = sortedMovies
-
-            // 데이터를 받은 후에 UI 업데이트를 수행하거나 다른 작업을 수행할 수 있습니다.
-            DispatchQueue.main.async {
-                self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
-            }
-        }
+        loadData()
         self.tableView.delegate = self
         
         setUI()
         setAutoLayOut()
+        NotificationCenter.default.addObserver(self, selector: #selector(handleLocalDataChangeNotification(_:)), name: NSNotification.Name("LocalDataDidChangeNotification"), object: nil)
     }
     
     func setUI() {
@@ -56,6 +49,35 @@ class HomeViewController: UIViewController {
         tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor).isActive = true
     }
     
+    func loadData() {
+        movieManager.fetchMovies { [weak self] movies in
+            let sortedMovies = movies.sorted { $0.rank < $1.rank }
+            
+            if let localMovies = self?.localDataManager.reviewedMovies {
+                self?.updateDataSource(sortedMovies: sortedMovies, localMovies: localMovies)
+            } else {
+                self?.dataSource = sortedMovies
+            }
+            
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
+    func updateDataSource(sortedMovies: [Movie], localMovies: [Movie]) {
+        dataSource = sortedMovies.map { sortedMovie in
+            if let updatedMovie = localMovies.first(where: { $0.movieCd == sortedMovie.movieCd }) {
+                return updatedMovie
+            } else {
+                return sortedMovie
+            }
+        }
+    }
+    
+    @objc func handleLocalDataChangeNotification(_ notification: Notification) {
+        loadData()
+    }
 }
 
 extension HomeViewController: UITableViewDataSource {
@@ -89,13 +111,6 @@ extension HomeViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 //
 extension HomeViewController: UITableViewDelegate {
-
-    //        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    //            let movie = dataSource[indexPath.row]
-    //            let detailViewController = DetailViewController(movie: movie)
-    //            detailViewController.modalPresentationStyle = .popover
-    //            present(detailViewController, animated: true, completion: nil)
-    //        }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = dataSource[indexPath.row]
