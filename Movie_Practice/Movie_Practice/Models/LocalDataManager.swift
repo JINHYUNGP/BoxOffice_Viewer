@@ -56,6 +56,7 @@ final class LocalDataManager {
             if let existingMovie = movies.first {
                 // 이미 해당 영화가 존재하는 경우
                 existingMovie.review = movie.review // 리뷰 업데이트
+                existingMovie.rating = movie.rating
             } else {
                 // 해당 영화가 존재하지 않는 경우 새로 생성
                 let coreDataModel = MovieCoreDataModel(context: context)

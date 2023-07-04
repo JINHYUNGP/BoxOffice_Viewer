@@ -261,12 +261,15 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
     @objc func onSaveButtonTapped() {
         var tempMovie = self.movie
         tempMovie.review = reviewTextView.text
+        tempMovie.rating = starView.movie.rating
         localDataManager.saveMovieContext(with: tempMovie)        
         self.dismiss(animated: true, completion: nil)
     }
     
     @objc func onCloseButtonTapped() {
-        self.dismiss(animated: true, completion: nil)
+        presentingViewController?.dismiss(animated: false, completion: nil)
+        presentingViewController?.dismiss(animated: false, completion: nil)
+//        self.dismiss(animated: true, completion: nil)
     }
     
     func starRatingView(_ view: StarRatingView, didChangeRating rating: Float) {
