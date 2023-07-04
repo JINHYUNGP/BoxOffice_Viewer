@@ -19,9 +19,9 @@ struct Movie {
     var rank: Int = 0
     var movieCd: String = ""
     var selectedThumbnail: String? {
-            let thumbnailLinks = thumbnailImage.components(separatedBy: "|")
-            return thumbnailLinks[0]
-        }
+        let thumbnailLinks = thumbnailImage.components(separatedBy: "|")
+        return thumbnailLinks[0]
+    }
 }
 
 extension Movie {
@@ -45,8 +45,7 @@ class MovieManager {
         return dateFormatter.string(from: yesterday ?? Date())
     }()
     var movies: [DailyBoxOfficeList] = []
-//    var reviewedMovies: [Movie] = []
-//
+    
     private init() {
         
     }
@@ -65,15 +64,13 @@ class MovieManager {
                 
                 for index in movies.indices {
                     dispatchGroup.enter()
-                    var movie = movies[index]
+                    let movie = movies[index]
                     self.fetchKMDBData(with: movie.title) { fetchedMovie in
                         if let fetchedMovie = fetchedMovie {
-                            movie.thumbnailImage = fetchedMovie.thumbnailImage
-                            movie.actor = fetchedMovie.actor
-                            movie.director = fetchedMovie.director
-                            movie.description = fetchedMovie.description
-                            movie.movieCd = fetchedMovie.movieCd
-                            resultMovies.append(movie)
+                            var updatedMovie = fetchedMovie
+                            updatedMovie.rank = movie.rank
+                            updatedMovie.movieCd = movie.movieCd
+                            resultMovies.append(updatedMovie)
                         }
                         dispatchGroup.leave()
                     }
@@ -90,6 +87,7 @@ class MovieManager {
             }
         }
     }
+    
     func fetchBoxOfficeData(completion: @escaping (Result<[DailyBoxOfficeList], Error>) -> Void) {
         let urlString = "http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=\(key)&targetDt=\(targetDt)"
         guard let url = URL(string: urlString) else {
@@ -137,10 +135,10 @@ class MovieManager {
             
             // 응답 검사
             guard let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode) else {
-                    print("Invalid response")
-                    completion(nil)
-                    return
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Invalid response")
+                completion(nil)
+                return
             }
             
             // 데이터 검사
@@ -166,7 +164,7 @@ class MovieManager {
                 for movieActor in movieData.actors.actor {
                     movie.actor += ", " + movieActor.actorNm
                 }
-
+                
                 for movieDirector in movieData.directors.director {
                     movie.director += ", " + movieDirector.directorNm
                 }
@@ -174,7 +172,7 @@ class MovieManager {
                 for moviePlot in movieData.plots.plot {
                     movie.description += moviePlot.plotText
                 }
-
+                
                 movie.rating = Double(movieData.ratings.rating[0].ratingGrade) ?? 0.0
                 movie.thumbnailImage = movieData.posters
                 // 데이터를 받은 후에 UI 업데이트를 수행
@@ -212,10 +210,10 @@ class MovieManager {
             
             // 응답 검사
             guard let httpResponse = response as? HTTPURLResponse,
-                (200...299).contains(httpResponse.statusCode) else {
-                    print("Invalid response")
-                    completion(nil)
-                    return
+                  (200...299).contains(httpResponse.statusCode) else {
+                print("Invalid response")
+                completion(nil)
+                return
             }
             
             // 데이터 검사
@@ -281,22 +279,22 @@ class MovieManager {
     func updateUI(with kmdb: KMDB) {
         // kmdb 객체에서 필요한 데이터를 추출하여 UI를 업데이트하는 코드를 작성합니다.
         
-//        // 예시로 데이터를 출력하는 코드
-//        print("Query: \(kmdb.query)")
-//        print("KMA Query: \(kmdb.kmaQuery)")
-//        print("Total Count: \(kmdb.totalCount)")
-//
-//        for datum in kmdb.data {
-//            print("Coll Name: \(datum.collName)")
-//            print("Total Count: \(datum.totalCount)")
-//            print("Count: \(datum.count)")
-//
-//            for result in datum.result {
-//                print("Doc ID: \(result.docid)")
-//                print("Movie ID: \(result.movieID)")
-//                // 필요한 데이터를 추가로 출력하거나, 데이터를 활용하여 UI를 업데이트하는 코드를 작성합니다.
-//            }
-//        }
+        //        // 예시로 데이터를 출력하는 코드
+        //        print("Query: \(kmdb.query)")
+        //        print("KMA Query: \(kmdb.kmaQuery)")
+        //        print("Total Count: \(kmdb.totalCount)")
+        //
+        //        for datum in kmdb.data {
+        //            print("Coll Name: \(datum.collName)")
+        //            print("Total Count: \(datum.totalCount)")
+        //            print("Count: \(datum.count)")
+        //
+        //            for result in datum.result {
+        //                print("Doc ID: \(result.docid)")
+        //                print("Movie ID: \(result.movieID)")
+        //                // 필요한 데이터를 추가로 출력하거나, 데이터를 활용하여 UI를 업데이트하는 코드를 작성합니다.
+        //            }
+        //        }
         
         // UI 업데이트 코드 작성
         // 예시로는 콘솔에 데이터를 출력했지만, 실제로는 레이블, 이미지뷰, 테이블뷰 등의 UI 컴포넌트를 업데이트해야 합니다.

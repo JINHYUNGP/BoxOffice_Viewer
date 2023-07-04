@@ -261,7 +261,9 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
     @objc func onSaveButtonTapped() {
         var tempMovie = self.movie
         tempMovie.review = reviewTextView.text
-        localDataManager.saveMovieContext(with: tempMovie)        
+        tempMovie.rating = starView.movie.rating
+        localDataManager.saveMovieContext(with: tempMovie)
+        NotificationCenter.default.post(name: NSNotification.Name("LocalDataDidChangeNotification"), object: nil)
         self.dismiss(animated: true, completion: nil)
     }
     
