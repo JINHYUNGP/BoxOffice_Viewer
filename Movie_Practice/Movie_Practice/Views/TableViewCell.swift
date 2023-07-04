@@ -59,8 +59,9 @@ class TableViewCell: UITableViewCell {
         ratingStackView.axis = .horizontal
         ratingStackView.spacing = 5
         
-        starRatingView.movie = movie
+        starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
         contentView.addSubview(ratingStackView)
+//        ratingStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         ratingStackView.addArrangedSubview(ratingLabel)
         ratingStackView.addArrangedSubview(starRatingView)
         

@@ -72,7 +72,7 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "배우: "
         label.font = .systemFont(ofSize: 15)
-        label.numberOfLines = 2 // 최대 2줄까지 보여줌
+        label.numberOfLines = 3 // 최대 2줄까지 보여줌
         label.lineBreakMode = .byTruncatingTail // 넘칠 경우 말줄임표로 표시
         label.textColor = .black
         return label
@@ -226,15 +226,15 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
         directorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         directorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
-        let actorHeight = actorLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-        actorLabel.heightAnchor.constraint(equalToConstant: actorHeight).isActive = true
-        actorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 45).isActive = true
+//        let actorHeight = actorLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
+//        actorLabel.heightAnchor.constraint(equalToConstant: actorHeight).isActive = true
+//        actorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 45).isActive = true
         actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: margin).isActive = true
         actorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         actorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
         starView.translatesAutoresizingMaskIntoConstraints = false
-        starView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor, constant: 10).isActive = true
+//        starView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor, constant: 10).isActive = true
         starView.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         starView.bottomAnchor.constraint(equalTo: labelStackView.bottomAnchor).isActive = true
         
@@ -271,7 +271,8 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
         localDataManager.saveMovieContext(with: tempMovie)
         NotificationCenter.default.post(name: NSNotification.Name("LocalDataDidChangeNotification"), object: nil)
 
-        self.dismiss(animated: true, completion: nil)
+        presentingViewController?.dismiss(animated: false, completion: nil)
+        presentingViewController?.dismiss(animated: false, completion: nil)
     }
     
     @objc func onCloseButtonTapped() {
