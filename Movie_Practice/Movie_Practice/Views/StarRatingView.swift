@@ -10,7 +10,7 @@ class StarRatingView: UIView {
     var movie: Movie
     private let starCount = 5
     private let starSize: CGSize
-    private var currentRating: Float = 0
+    private lazy var currentRating: Float = Float(movie.rating)
     weak var delegate: StarRatingViewDelegate?
     
     let starImage: UIImage = UIImage(systemName: "star")!.withTintColor(.systemOrange, renderingMode: .alwaysOriginal)

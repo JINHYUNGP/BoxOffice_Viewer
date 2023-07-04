@@ -19,6 +19,7 @@ final class LocalDataManager {
                 var tempMovie = Movie()
                 tempMovie.title = movie.title ?? ""
                 tempMovie.director = movie.director ?? ""
+                tempMovie.actor = movie.actor ?? ""
                 tempMovie.rank = Int(movie.rank)
                 tempMovie.description = movie.movieDescription ?? ""
                 tempMovie.rating = movie.rating
@@ -69,6 +70,8 @@ final class LocalDataManager {
                 coreDataModel.thumbnailImage = movie.thumbnailImage
                 coreDataModel.director = movie.director
                 coreDataModel.movieCd = movie.movieCd
+                print("저장할 새 데이터", coreDataModel)
+                // 여기도 저장이 잘 됨.
             }
             
             try context.save()

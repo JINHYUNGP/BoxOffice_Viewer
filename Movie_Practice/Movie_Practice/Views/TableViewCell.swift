@@ -11,7 +11,7 @@ class TableViewCell: UITableViewCell {
     
     static let identifier = "cell"
     
-    let movie = Movie()
+    var movie = Movie()
     // 영화 데이터를 표시하기 위한 뷰들
     let titleLabel = UILabel()
     let directorLabel = UILabel()
