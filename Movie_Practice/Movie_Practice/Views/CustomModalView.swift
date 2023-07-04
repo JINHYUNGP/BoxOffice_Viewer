@@ -70,7 +70,6 @@ class CustomModalView: UIView {
         addSubview(closeButton)
         addSubview(movieImage)
         addSubview(summaryLabel)
-//        addSubview(starView!)
         addSubview(reviewButton)
     }
     private func setupView() {

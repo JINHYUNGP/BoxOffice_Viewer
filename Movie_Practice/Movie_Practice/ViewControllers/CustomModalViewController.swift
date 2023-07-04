@@ -64,8 +64,8 @@ class CustomModalViewController: UIViewController {
     }
     
     @objc private func buttonTapped() {
-        let detailVC = DetailViewController(movie: movie)
+        let detailVC = DetailViewController(movie: self.movie)
         detailVC.modalPresentationStyle = .overFullScreen
-        present(detailVC, animated: false, completion: nil)
+        self.present(detailVC, animated: true, completion: nil)
     }
 }

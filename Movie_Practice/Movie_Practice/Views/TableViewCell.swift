@@ -9,12 +9,16 @@ import UIKit
 
 class TableViewCell: UITableViewCell {
     
+    static let identifier = "cell"
+    
+    let movie = Movie()
     // 영화 데이터를 표시하기 위한 뷰들
     let titleLabel = UILabel()
     let directorLabel = UILabel()
     let actorLabel = UILabel()
     let ratingLabel = UILabel()
     let thumbnailImageView = UIImageView()
+    lazy var starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
     
     // 영화 데이터를 설정하는 메서드
     func configure(with movie: Movie) {
@@ -46,19 +50,19 @@ class TableViewCell: UITableViewCell {
         actorLabel.text = "배우: " + refinedActor
         ratingLabel.text = "평점: "
         
-//        let starRatingView: StarRatingView = {
-//            let initialRating: Float = Float(movie.rating)
-//            let view = StarRatingView(frame: CGRect(x: 0, y: 0, width: 100, height: 5), initialRating: initialRating)
-//            view.translatesAutoresizingMaskIntoConstraints = false
-//            return view
-//        }()
-        
         // StarRatingView를 contentView에 추가
         contentView.addSubview(titleLabel)
         contentView.addSubview(directorLabel)
         contentView.addSubview(actorLabel)
-        contentView.addSubview(ratingLabel)
-        //contentView.addSubview(starRatingView)
+        
+        let ratingStackView = UIStackView()
+        ratingStackView.axis = .horizontal
+        ratingStackView.spacing = 5
+        
+        starRatingView.movie = movie
+        contentView.addSubview(ratingStackView)
+        ratingStackView.addArrangedSubview(ratingLabel)
+        ratingStackView.addArrangedSubview(starRatingView)
         
         titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         titleLabel.lineBreakMode = .byTruncatingTail // 너비를 초과하는 경우 생략 부호로 표시
@@ -72,6 +76,8 @@ class TableViewCell: UITableViewCell {
         actorLabel.translatesAutoresizingMaskIntoConstraints = false
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
+        ratingStackView.translatesAutoresizingMaskIntoConstraints = false
+        starRatingView.translatesAutoresizingMaskIntoConstraints = false
         
         if let url = URL(string: movie.selectedThumbnail ?? "") {
             DispatchQueue.global().async {
@@ -111,18 +117,18 @@ class TableViewCell: UITableViewCell {
             titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: margin),
             titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
 
-            directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
             directorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             directorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
 
-            actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor),
+            actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 5),
             actorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             actorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
 
-            ratingLabel.topAnchor.constraint(equalTo: actorLabel.bottomAnchor),
-            ratingLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            ratingLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            ratingLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+//            ratingStackView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor),
+            ratingStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+//            ratingStackView.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
+            ratingStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
         ])
 
