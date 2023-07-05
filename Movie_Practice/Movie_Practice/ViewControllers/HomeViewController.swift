@@ -100,6 +100,10 @@ extension HomeViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
+        // 스크롤 시 셀이 재사용되더라도 겹치는 뷰 제어 가능
+        if cell.starRatingView.superview != nil {
+            cell.starRatingView.removeFromSuperview()
+        }
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)

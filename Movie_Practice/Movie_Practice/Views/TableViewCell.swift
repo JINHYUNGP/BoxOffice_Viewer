@@ -61,7 +61,6 @@ class TableViewCell: UITableViewCell {
         
         starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
         contentView.addSubview(ratingStackView)
-//        ratingStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         ratingStackView.addArrangedSubview(ratingLabel)
         ratingStackView.addArrangedSubview(starRatingView)
         
@@ -126,9 +125,7 @@ class TableViewCell: UITableViewCell {
             actorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             actorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
 
-//            ratingStackView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor),
             ratingStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-//            ratingStackView.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             ratingStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
 
         ])
