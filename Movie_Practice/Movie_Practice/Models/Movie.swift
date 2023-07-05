@@ -153,12 +153,13 @@ class MovieManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let kmdb = try decoder.decode(KMDB.self, from: jsonData)
-                guard let movieData = kmdb.data.first?.result.first else {
+
+                guard let movieData = kmdb.data[0].result.sorted(by:{ $0.ratings.rating.last?.releaseDate ?? "" > $1.ratings.rating.last?.releaseDate ?? "" } ).first else {
                     print("No movie data found")
                     completion(nil)
                     return
                 }
-                
+                print("여기다잉", kmdb.data[0].result)
                 var movie = Movie()
                 movie.title = movieTitle
                 for movieActor in movieData.actors.actor {
