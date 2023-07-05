@@ -91,6 +91,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = movies[indexPath.row]
         let modalVC = CustomModalViewController(movie: movie)
+        
         // 모달 스타일 설정
         modalVC.modalPresentationStyle = .overFullScreen
         modalVC.modalTransitionStyle = .crossDissolve
@@ -116,7 +117,7 @@ extension SearchViewController: UISearchResultsUpdating {
         movieManager.fetchAllMovies(with: searchText) { [weak self] movies in
             
             self?.movies = movies ?? [Movie()]
-            
+            movies?.sorted(by: {$0.movieCd > $1.movieCd})
             DispatchQueue.main.async {
                 self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
             }
