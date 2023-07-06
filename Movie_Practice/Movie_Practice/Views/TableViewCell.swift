@@ -28,6 +28,9 @@ class TableViewCell: UITableViewCell {
         actorLabel.text = "배우: " + movie.actor.removeLeadingCommaSpace()
         ratingLabel.text = "평점: "
         
+        actorLabel.numberOfLines = 2 // 최대 2줄까지 보여줌
+        actorLabel.lineBreakMode = .byTruncatingTail // 넘칠 경우 말줄임표로 표시
+        
         // StarRatingView를 contentView에 추가
         contentView.addSubview(titleLabel)
         contentView.addSubview(directorLabel)
