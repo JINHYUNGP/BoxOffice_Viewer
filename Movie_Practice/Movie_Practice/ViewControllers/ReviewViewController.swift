@@ -92,7 +92,6 @@ extension ReviewViewController: UITableViewDataSource {
             localDataManager.deleteData(with: movieCdToDelete)
             dataSource.remove(at: indexPath.row) // 데이터 소스에서도 삭제된 항목을 제거합니다.
             tableView.deleteRows(at: [indexPath], with: .fade)
-            print(localDataManager.persistentContainer.viewContext)
         } else if editingStyle == .insert {
             
         }

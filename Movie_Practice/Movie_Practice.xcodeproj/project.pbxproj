@@ -30,6 +30,7 @@
 		F3A57C692A496E5D008248DE /* MovieCoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F3A57C672A496E5D008248DE /* MovieCoreDataModel.xcdatamodeld */; };
 		F3FA78DB2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FA78D92A4E9323003B0F0A /* MovieCoreDataModel+CoreDataClass.swift */; };
 		F3FA78DC2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FA78DA2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataProperties.swift */; };
+		F3FA78E12A56E5AE003B0F0A /* String + SpecialCharacters.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FA78E02A56E5AE003B0F0A /* String + SpecialCharacters.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,6 +78,7 @@
 		F3A57C682A496E5D008248DE /* MovieDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MovieDataModel.xcdatamodel; sourceTree = "<group>"; };
 		F3FA78D92A4E9323003B0F0A /* MovieCoreDataModel+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovieCoreDataModel+CoreDataClass.swift"; sourceTree = "<group>"; };
 		F3FA78DA2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MovieCoreDataModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		F3FA78E02A56E5AE003B0F0A /* String + SpecialCharacters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String + SpecialCharacters.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +132,7 @@
 		F330C56A2A0B70DC004E2B95 /* Movie_Practice */ = {
 			isa = PBXGroup;
 			children = (
+				F3FA78DF2A56E542003B0F0A /* Extensions */,
 				F330C59C2A0B7CF9004E2B95 /* App */,
 				F330C59B2A0B7CAC004E2B95 /* Models */,
 				F3A18C502A109DA600C3EEE1 /* Views */,
@@ -199,6 +202,14 @@
 				C54B54CB2A45A39600521563 /* CustomModalView.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		F3FA78DF2A56E542003B0F0A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F3FA78E02A56E5AE003B0F0A /* String + SpecialCharacters.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,6 +347,7 @@
 				F3A18C542A109DD100C3EEE1 /* TableViewCell.swift in Sources */,
 				F3973BD72A135DDB00D9ED2A /* StarRatingView.swift in Sources */,
 				F330C5A12A0B7FDA004E2B95 /* HomeViewController.swift in Sources */,
+				F3FA78E12A56E5AE003B0F0A /* String + SpecialCharacters.swift in Sources */,
 				C54B54CF2A45A4A700521563 /* CustomModalViewController.swift in Sources */,
 				F330C5A62A0B7FFA004E2B95 /* ReviewViewController.swift in Sources */,
 				C54B54CC2A45A39600521563 /* CustomModalView.swift in Sources */,

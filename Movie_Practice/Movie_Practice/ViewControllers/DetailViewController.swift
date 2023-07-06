@@ -176,8 +176,8 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
         }
         
         descriptionLabel.text = movie.description
-        directorLabel.text! += movie.director
-        actorLabel.text! += movie.actor
+        directorLabel.text! += movie.director.removeLeadingCommaSpace()
+        actorLabel.text! += movie.actor.removeLeadingCommaSpace()
         
         view.addSubview(closeButton)
         view.addSubview(reviewTitleLabel)

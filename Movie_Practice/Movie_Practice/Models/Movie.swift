@@ -45,11 +45,14 @@ class MovieManager {
         return dateFormatter.string(from: yesterday ?? Date())
     }()
     var movies: [DailyBoxOfficeList] = []
-    
+    var currentStartCount: Int = 0
+    var maxCount: Int = 0
     private init() {
         
     }
-    
+    func setCurrentStartCountZero() {
+        self.currentStartCount = 0
+    }
     func fetchMovies(completion: @escaping ([Movie]) -> Void) {
         fetchBoxOfficeData { result in
             switch result {
@@ -159,9 +162,10 @@ class MovieManager {
                     completion(nil)
                     return
                 }
-                print("여기다잉", kmdb.data[0].result)
+                
                 var movie = Movie()
                 movie.title = movieTitle
+                
                 for movieActor in movieData.actors.actor {
                     movie.actor += ", " + movieActor.actorNm
                 }
@@ -178,7 +182,6 @@ class MovieManager {
                 movie.thumbnailImage = movieData.posters
                 // 데이터를 받은 후에 UI 업데이트를 수행
                 DispatchQueue.main.async {
-                    self.updateUI(with: kmdb)
                     completion(movie)
                 }
                 
@@ -192,13 +195,13 @@ class MovieManager {
         task.resume()
     }
     
-    func fetchAllMovies(with movieTitle: String, completion: @escaping ([Movie]?) -> Void) {
+    func fetchAllMovies(with movieTitle: String, startCount: Int? = nil, completion: @escaping ([Movie]?) -> Void) {
         // API 엔드포인트 URL
         guard let encodedTitle = movieTitle.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&detail=Y&title=\(encodedTitle)&ServiceKey=\(kmdbKey)") else {
-            print("Invalid URL")
-            completion(nil)
-            return
+                let url = createURL(with: encodedTitle, startCount: startCount, apiKey: kmdbKey) else {
+                print("Invalid URL")
+                completion(nil)
+                return
         }
         
         let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -229,8 +232,15 @@ class MovieManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let kmdb = try decoder.decode(KMDB.self, from: jsonData)
-                
+    
                 var movies: [Movie] = []
+                let totalCount = kmdb.totalCount
+                if startCount ?? 0 >= totalCount {
+                    completion(nil)
+                } else {
+                    self.maxCount = totalCount
+                }
+
                 for movieData in kmdb.data.first?.result ?? [] {
                     
                     var movie = Movie()
@@ -245,11 +255,11 @@ class MovieManager {
                     movie.title = cleanedTitle
                     
                     for movieActor in movieData.actors.actor {
-                        movie.actor += movieActor.actorNm
+                        movie.actor += ", " + movieActor.actorNm
                     }
                     
                     for movieDirector in movieData.directors.director {
-                        movie.director += movieDirector.directorNm
+                        movie.director += ", " + movieDirector.directorNm
                     }
                     
                     for moviePlot in movieData.plots.plot {
@@ -277,28 +287,14 @@ class MovieManager {
         task.resume()
     }
     
-    func updateUI(with kmdb: KMDB) {
-        // kmdb 객체에서 필요한 데이터를 추출하여 UI를 업데이트하는 코드를 작성합니다.
+    private func createURL(with encodedTitle: String, startCount: Int? = nil, apiKey: String) -> URL? {
+        var urlString = "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2&detail=Y&title=\(encodedTitle)&ServiceKey=\(apiKey)"
         
-        //        // 예시로 데이터를 출력하는 코드
-        //        print("Query: \(kmdb.query)")
-        //        print("KMA Query: \(kmdb.kmaQuery)")
-        //        print("Total Count: \(kmdb.totalCount)")
-        //
-        //        for datum in kmdb.data {
-        //            print("Coll Name: \(datum.collName)")
-        //            print("Total Count: \(datum.totalCount)")
-        //            print("Count: \(datum.count)")
-        //
-        //            for result in datum.result {
-        //                print("Doc ID: \(result.docid)")
-        //                print("Movie ID: \(result.movieID)")
-        //                // 필요한 데이터를 추가로 출력하거나, 데이터를 활용하여 UI를 업데이트하는 코드를 작성합니다.
-        //            }
-        //        }
+        if let startCount = startCount {
+            urlString += "&startCount=\(startCount)"
+        }
         
-        // UI 업데이트 코드 작성
-        // 예시로는 콘솔에 데이터를 출력했지만, 실제로는 레이블, 이미지뷰, 테이블뷰 등의 UI 컴포넌트를 업데이트해야 합니다.
+        return URL(string: urlString)
     }
     
 }

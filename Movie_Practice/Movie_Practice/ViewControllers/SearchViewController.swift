@@ -8,7 +8,7 @@
 import UIKit
 
 class SearchViewController: UIViewController, UITableViewDelegate {
-    
+    let movieManager = MovieManager.shared
     var tableView = UITableView()
     var searchBar = UISearchBar()
     var movies: [Movie] = []
@@ -81,10 +81,12 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
-        cell.contentView.addSubview(paddingView)
-        cell.contentView.sendSubviewToBack(paddingView)
-        cell.configure(with: movies[indexPath.row])
+        if indexPath.row < movies.count {
+            let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
+            cell.contentView.addSubview(paddingView)
+            cell.contentView.sendSubviewToBack(paddingView)
+            cell.configure(with: movies[indexPath.row])
+        }
         return cell
     }
     
@@ -105,6 +107,33 @@ extension SearchViewController: UITableViewDataSource {
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("function is calling")
+        let lastRowIndex = tableView.numberOfRows(inSection: 0) - 1
+        guard let searchText = searchBar.text else {
+            return
+        }
+        print("im here")
+        print("currentStartCount + 10", movieManager.currentStartCount + 10 )
+        print("maxcount", movieManager.maxCount)
+        if indexPath.row == lastRowIndex && movieManager.currentStartCount + 10 < movieManager.maxCount {
+            movieManager.currentStartCount += 10 // 다음 페이지로 이동
+            
+            let movieManager = MovieManager.shared
+            movieManager.fetchAllMovies(with: searchText, startCount: movieManager.currentStartCount ) { [weak self] movies in
+                guard let additionalMovies = movies else {
+                    return
+                }
+                
+                self?.movies += additionalMovies
+                
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            }
+        }
+    }
 }
 
 extension SearchViewController: UISearchResultsUpdating {
@@ -113,18 +142,19 @@ extension SearchViewController: UISearchResultsUpdating {
         guard let searchText = searchController.searchBar.text else {
             return
         }
-        let movieManager = MovieManager.shared
         movieManager.fetchAllMovies(with: searchText) { [weak self] movies in
+            guard let movies = movies else {
+                return
+            }
             
-            self?.movies = movies ?? [Movie()]
-            movies?.sorted(by: {$0.movieCd > $1.movieCd})
+            self?.movies = movies.sorted(by: { $0.movieCd > $1.movieCd })
+            
             DispatchQueue.main.async {
                 self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
             }
         }
         
     }
-    
     
 }
 
@@ -133,7 +163,7 @@ extension SearchViewController: UISearchBarDelegate {
         guard let searchText = searchBar.text else {
             return
         }
-        let movieManager = MovieManager.shared
+        movieManager.setCurrentStartCountZero()
         movieManager.fetchAllMovies(with: searchText) { [weak self] movies in
             
             self?.movies = movies ?? [Movie()]
@@ -143,5 +173,6 @@ extension SearchViewController: UISearchBarDelegate {
             }
         }
     }
+    
     
 }

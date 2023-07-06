@@ -24,30 +24,8 @@ class TableViewCell: UITableViewCell {
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         
-        var refinedActor: String {
-            var tempActor = movie.actor
-            if !tempActor.isEmpty {
-                tempActor.removeFirst()
-                tempActor.removeFirst()
-            }
-            else {
-                return  ""
-            }
-            return tempActor
-        }
-        var refinedDirector: String {
-            var tempDirector = movie.director
-            if !tempDirector.isEmpty {
-                tempDirector.removeFirst()
-                tempDirector.removeFirst()
-            }
-            else {
-                return  ""
-            }
-            return tempDirector
-        }
-        directorLabel.text = "감독: " + refinedDirector
-        actorLabel.text = "배우: " + refinedActor
+        directorLabel.text = "감독: " + movie.director.removeLeadingCommaSpace()
+        actorLabel.text = "배우: " + movie.actor.removeLeadingCommaSpace()
         ratingLabel.text = "평점: "
         
         // StarRatingView를 contentView에 추가
