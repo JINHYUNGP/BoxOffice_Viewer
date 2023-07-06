@@ -81,6 +81,9 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
+        if cell.starRatingView.superview != nil {
+            cell.starRatingView.removeFromSuperview()
+        }
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)
