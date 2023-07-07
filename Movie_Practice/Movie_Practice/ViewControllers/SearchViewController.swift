@@ -89,7 +89,6 @@ extension SearchViewController: UITableViewDataSource {
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)
         cell.configure(with: movies[indexPath.row])
-
         return cell
     }
     
@@ -113,6 +112,7 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         print("function is calling")
+        //
         let lastRowIndex = tableView.numberOfRows(inSection: 0) - 1
         guard let searchText = searchBar.text else {
             return
@@ -121,7 +121,7 @@ extension SearchViewController: UITableViewDataSource {
         print("currentStartCount + 10", movieManager.currentStartCount + 10 )
         print("maxcount", movieManager.maxCount)
         if indexPath.row == lastRowIndex && movieManager.currentStartCount + 10 < movieManager.maxCount {
-            movieManager.currentStartCount += 10 // 다음 페이지로 이동
+            movieManager.currentStartCount += 10
             
             let movieManager = MovieManager.shared
             movieManager.fetchAllMovies(with: searchText, startCount: movieManager.currentStartCount ) { [weak self] movies in

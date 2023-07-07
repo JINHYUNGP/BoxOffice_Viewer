@@ -15,7 +15,6 @@ extension String {
         if modifiedString.hasPrefix(leadingCommaSpace) {
             modifiedString.removeFirst(leadingCommaSpace.count)
         }
-        
         return modifiedString
     }
 }
