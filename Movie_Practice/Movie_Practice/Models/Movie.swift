@@ -5,6 +5,7 @@
 //  Created by 박진형 on 2023/05/10.
 //
 
+// 영화 정보를 저장할 모델
 import Foundation
 import CoreData
 
