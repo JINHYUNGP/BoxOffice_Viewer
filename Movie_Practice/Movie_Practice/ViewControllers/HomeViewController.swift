@@ -38,7 +38,6 @@ class HomeViewController: UIViewController {
         view.backgroundColor = .white
         view.addSubview(tableView)
         view.largeContentTitle = "현재 상영작"
-        
     }
     
     func setAutoLayOut(){

@@ -109,9 +109,6 @@
 		F330C55F2A0B70DC004E2B95 = {
 			isa = PBXGroup;
 			children = (
-				F3FA78D92A4E9323003B0F0A /* MovieCoreDataModel+CoreDataClass.swift */,
-				F3FA78DA2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataProperties.swift */,
-				F3A57C672A496E5D008248DE /* MovieCoreDataModel.xcdatamodeld */,
 				F330C56A2A0B70DC004E2B95 /* Movie_Practice */,
 				F330C5812A0B70DD004E2B95 /* Movie_PracticeTests */,
 				F330C58B2A0B70DD004E2B95 /* Movie_PracticeUITests */,
@@ -164,6 +161,9 @@
 		F330C59B2A0B7CAC004E2B95 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F3FA78D92A4E9323003B0F0A /* MovieCoreDataModel+CoreDataClass.swift */,
+				F3FA78DA2A4E9323003B0F0A /* MovieCoreDataModel+CoreDataProperties.swift */,
+				F3A57C672A496E5D008248DE /* MovieCoreDataModel.xcdatamodeld */,
 				F330C59D2A0B7DFB004E2B95 /* Movie.swift */,
 				F36572C32A1943DF007630E2 /* BoxOffice.swift */,
 				F36572C52A194418007630E2 /* KMDB.swift */,

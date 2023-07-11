@@ -10,17 +10,31 @@ import UIKit
 class TableViewCell: UITableViewCell {
     static let identifier = "cell"
     var movie = Movie()
-
+    
     lazy var isRankVisible: Bool = false {
         didSet {
             rankImageView.isHidden = !isRankVisible
             rankBackgroundView.isHidden = !isRankVisible
         }
     }
-
-    let rankImageView = UIImageView()
-    let rankBackgroundView = UIView()
-
+    
+    let rankImageView: UIImageView = {
+        let rankImageView = UIImageView()
+        rankImageView.tintColor = .black // 적절한 색상으로 설정
+        rankImageView.contentMode = .scaleAspectFit
+        rankImageView.translatesAutoresizingMaskIntoConstraints = false
+        return rankImageView
+    }()
+    
+    let rankBackgroundView: UIView = {
+        let rankBackgroundView = UIView()
+        rankBackgroundView.backgroundColor = .white // 원하는 배경색으로 설정
+        rankBackgroundView.layer.cornerRadius = 3 // 모서리를 둥글게 설정
+        rankBackgroundView.clipsToBounds = true // 모서리를 둥글게 적용하기 위해 클리핑 활성화
+        rankBackgroundView.translatesAutoresizingMaskIntoConstraints = false
+        return rankBackgroundView
+    }()
+    
     
     let titleLabel: UILabel = {
         let label = UILabel()
@@ -61,7 +75,6 @@ class TableViewCell: UITableViewCell {
         return imageView
     }()
     
-
     lazy var starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
     
     let ratingStackView: UIStackView = {
@@ -74,11 +87,10 @@ class TableViewCell: UITableViewCell {
     
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
-        
         directorLabel.text = "감독: " + movie.director.removeLeadingCommaSpace()
         actorLabel.text = "배우: " + movie.actor.removeLeadingCommaSpace()
         ratingLabel.text = "평점: "
-        
+        rankImageView.image = UIImage(systemName: "\(movie.rank).square")
         starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
         
         if let url = URL(string: movie.selectedThumbnail ?? "") {
@@ -91,29 +103,13 @@ class TableViewCell: UITableViewCell {
                 }
             }
         }
-        
-
-        
-        rankBackgroundView.backgroundColor = .white // 원하는 배경색으로 설정
-        rankBackgroundView.layer.cornerRadius = 3 // 모서리를 둥글게 설정
-        rankBackgroundView.clipsToBounds = true // 모서리를 둥글게 적용하기 위해 클리핑 활성화
-        rankBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(rankBackgroundView)
-        
-        rankImageView.image = UIImage(systemName: "\(movie.rank).square")
-        rankImageView.tintColor = .black // 적절한 색상으로 설정
-        rankImageView.contentMode = .scaleAspectFit
-        rankImageView.translatesAutoresizingMaskIntoConstraints = false
-        rankBackgroundView.addSubview(rankImageView)
-        
-
+   
         if let thumbnail = movie.selectedThumbnail {
             if thumbnail.isEmpty {
                 thumbnailImageView.image = UIImage(named: "noimage")
                 thumbnailImageView.contentMode = .scaleAspectFit
             }
         }
-        
         createViews()
         setConstraints()
     }
@@ -124,29 +120,36 @@ class TableViewCell: UITableViewCell {
         contentView.addSubview(directorLabel)
         contentView.addSubview(actorLabel)
         contentView.addSubview(ratingStackView)
+        contentView.addSubview(rankBackgroundView)
         ratingStackView.addArrangedSubview(ratingLabel)
         ratingStackView.addArrangedSubview(starRatingView)
+        rankBackgroundView.addSubview(rankImageView)
     }
     
     private func setConstraints() {
         let thumbnailWidth: CGFloat = 120 // 이미지의 고정된 너비
         let thumbnailHeight: CGFloat = 160 // 이미지의 고정된 높이
-
-     
+        
+        
         thumbnailImageView.clipsToBounds = true // 이미지를 프레임 내에서 자르기
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(thumbnailImageView)
         // 다른 뷰들의 제약 조건도 수정해야 합니다.
         let margin: CGFloat = 10
-       
         
-        //contentView.bringSubviewToFront(rankImageView)
-        // titleLabel의 너비 제약 조건 설정
-//         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-//         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-
-    
+        if isRankVisible {
+            
+            rankBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5).isActive = true
+            rankBackgroundView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: margin + 5).isActive = true
+            rankBackgroundView.widthAnchor.constraint(equalToConstant: 20).isActive = true
+            rankBackgroundView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+            
+            rankImageView.centerXAnchor.constraint(equalTo: rankBackgroundView.centerXAnchor).isActive = true
+            rankImageView.centerYAnchor.constraint(equalTo: rankBackgroundView.centerYAnchor).isActive = true
+            
+            contentView.bringSubviewToFront(rankBackgroundView)
+        }
         
         thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         thumbnailImageView.widthAnchor.constraint(equalToConstant: thumbnailWidth).isActive = true
@@ -164,23 +167,9 @@ class TableViewCell: UITableViewCell {
         actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 5).isActive = true
         actorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
         actorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
-
+        
         ratingStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
         ratingStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -margin).isActive = true
-      if isRankVisible {
-            NSLayoutConstraint.activate([
-                
-                rankBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
-                rankBackgroundView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: margin + 5),
-                rankBackgroundView.widthAnchor.constraint(equalToConstant: 20), // 배경 뷰의 너비 조정
-                rankBackgroundView.heightAnchor.constraint(equalToConstant: 20), // 배경 뷰의 높이 조정
-                
-                rankImageView.centerXAnchor.constraint(equalTo: rankBackgroundView.centerXAnchor),
-                rankImageView.centerYAnchor.constraint(equalTo: rankBackgroundView.centerYAnchor),
-                
-            ])
-            contentView.bringSubviewToFront(rankBackgroundView)
-        }
 
     }
     
