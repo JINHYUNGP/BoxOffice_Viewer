@@ -105,7 +105,9 @@ extension HomeViewController: UITableViewDataSource {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 16))
         cell.contentView.addSubview(paddingView)
         cell.contentView.sendSubviewToBack(paddingView)
+        cell.isRankVisible = true
         cell.configure(with: dataSource[indexPath.row])
+        
         return cell
     }
 }
