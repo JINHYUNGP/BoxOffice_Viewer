@@ -149,7 +149,6 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
         configure()
         setAutoLayOut()
     }
@@ -226,15 +225,11 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
         directorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         directorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
-//        let actorHeight = actorLabel.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize).height
-//        actorLabel.heightAnchor.constraint(equalToConstant: actorHeight).isActive = true
-//        actorLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 45).isActive = true
         actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: margin).isActive = true
         actorLabel.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         actorLabel.trailingAnchor.constraint(equalTo: labelStackView.trailingAnchor).isActive = true
         
         starView.translatesAutoresizingMaskIntoConstraints = false
-//        starView.topAnchor.constraint(equalTo: actorLabel.bottomAnchor, constant: 10).isActive = true
         starView.leadingAnchor.constraint(equalTo: labelStackView.leadingAnchor).isActive = true
         starView.bottomAnchor.constraint(equalTo: labelStackView.bottomAnchor).isActive = true
         
@@ -278,7 +273,6 @@ class DetailViewController: UIViewController, StarRatingViewDelegate {
     @objc func onCloseButtonTapped() {
         presentingViewController?.dismiss(animated: false, completion: nil)
         presentingViewController?.dismiss(animated: false, completion: nil)
-//        self.dismiss(animated: true, completion: nil)
     }
     
     func starRatingView(_ view: StarRatingView, didChangeRating rating: Float) {

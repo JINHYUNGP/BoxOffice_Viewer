@@ -80,10 +80,8 @@ class HomeViewController: UIViewController {
     }
 }
 
+// MARK: - UITableViewDataSource
 extension HomeViewController: UITableViewDataSource {
-    // MARK: - UITableViewDataSource
-    
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         // 섹션 개수 반환
         return 1

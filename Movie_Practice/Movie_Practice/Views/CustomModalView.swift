@@ -46,7 +46,6 @@ class CustomModalView: UIView {
         let button = UIButton()
         button.backgroundColor = UIColor(red: 241 / 255, green: 155 / 255, blue: 145 / 255, alpha: 1.00)
         button.setTitle("나만의 리뷰 작성하기", for: .normal)
-//        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         button.layer.cornerRadius = 8.0
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -72,8 +71,8 @@ class CustomModalView: UIView {
         addSubview(summaryLabel)
         addSubview(reviewButton)
     }
+    
     private func setupView() {
-        
         titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 15).isActive = true
         titleLabel.widthAnchor.constraint(equalToConstant: 300).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
@@ -90,8 +89,6 @@ class CustomModalView: UIView {
         summaryLabel.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         summaryLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20).isActive = true
         summaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20).isActive = true
-        
-//        starView?.topAnchor.constraint(equalTo: summaryLabel.bottomAnchor, constant: 10).isActive = true
 
         reviewButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
         reviewButton.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

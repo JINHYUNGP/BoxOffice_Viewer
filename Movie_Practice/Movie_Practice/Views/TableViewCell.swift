@@ -8,27 +8,70 @@
 import UIKit
 
 class TableViewCell: UITableViewCell {
-    
     static let identifier = "cell"
-    
     var movie = Movie()
+
     lazy var isRankVisible: Bool = false {
         didSet {
             rankImageView.isHidden = !isRankVisible
             rankBackgroundView.isHidden = !isRankVisible
         }
     }
-    // 영화 데이터를 표시하기 위한 뷰들
-    let titleLabel = UILabel()
-    let directorLabel = UILabel()
-    let actorLabel = UILabel()
-    let ratingLabel = UILabel()
-    let thumbnailImageView = UIImageView()
+
     let rankImageView = UIImageView()
     let rankBackgroundView = UIView()
+
+    
+    let titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.lineBreakMode = .byTruncatingTail // 너비를 초과하는 경우 생략 부호로 표시
+        label.numberOfLines = 1 // 단일 라인으로 표시
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let directorLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let actorLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.numberOfLines = 2 // 최대 2줄까지 보여줌
+        label.lineBreakMode = .byTruncatingTail // 넘칠 경우 말줄임표로 표시
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let ratingLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    let thumbnailImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.clipsToBounds = true // 이미지를 프레임 내에서 자르기
+        return imageView
+    }()
+    
+
     lazy var starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
     
-    // 영화 데이터를 설정하는 메서드
+    let ratingStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 5
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+    
     func configure(with movie: Movie) {
         titleLabel.text = movie.title
         
@@ -36,37 +79,7 @@ class TableViewCell: UITableViewCell {
         actorLabel.text = "배우: " + movie.actor.removeLeadingCommaSpace()
         ratingLabel.text = "평점: "
         
-        actorLabel.numberOfLines = 2 // 최대 2줄까지 보여줌
-        actorLabel.lineBreakMode = .byTruncatingTail // 넘칠 경우 말줄임표로 표시
-        
-        // StarRatingView를 contentView에 추가
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(directorLabel)
-        contentView.addSubview(actorLabel)
-        
-        let ratingStackView = UIStackView()
-        ratingStackView.axis = .horizontal
-        ratingStackView.spacing = 5
-        
         starRatingView = StarRatingView(frame: CGRect.zero, movie: movie)
-        contentView.addSubview(ratingStackView)
-        ratingStackView.addArrangedSubview(ratingLabel)
-        ratingStackView.addArrangedSubview(starRatingView)
-        
-        titleLabel.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        titleLabel.lineBreakMode = .byTruncatingTail // 너비를 초과하는 경우 생략 부호로 표시
-        titleLabel.numberOfLines = 1 // 단일 라인으로 표시
-        directorLabel.font = UIFont.systemFont(ofSize: 16)
-        actorLabel.font = UIFont.systemFont(ofSize: 16)
-        ratingLabel.font = UIFont.systemFont(ofSize: 16)
-        
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        directorLabel.translatesAutoresizingMaskIntoConstraints = false
-        actorLabel.translatesAutoresizingMaskIntoConstraints = false
-        ratingLabel.translatesAutoresizingMaskIntoConstraints = false
-        thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        ratingStackView.translatesAutoresizingMaskIntoConstraints = false
-        starRatingView.translatesAutoresizingMaskIntoConstraints = false
         
         if let url = URL(string: movie.selectedThumbnail ?? "") {
             DispatchQueue.global().async {
@@ -79,6 +92,7 @@ class TableViewCell: UITableViewCell {
             }
         }
         
+
         
         rankBackgroundView.backgroundColor = .white // 원하는 배경색으로 설정
         rankBackgroundView.layer.cornerRadius = 3 // 모서리를 둥글게 설정
@@ -92,6 +106,7 @@ class TableViewCell: UITableViewCell {
         rankImageView.translatesAutoresizingMaskIntoConstraints = false
         rankBackgroundView.addSubview(rankImageView)
         
+
         if let thumbnail = movie.selectedThumbnail {
             if thumbnail.isEmpty {
                 thumbnailImageView.image = UIImage(named: "noimage")
@@ -99,43 +114,60 @@ class TableViewCell: UITableViewCell {
             }
         }
         
+        createViews()
+        setConstraints()
+    }
+    
+    private func createViews() {
+        contentView.addSubview(thumbnailImageView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(directorLabel)
+        contentView.addSubview(actorLabel)
+        contentView.addSubview(ratingStackView)
+        ratingStackView.addArrangedSubview(ratingLabel)
+        ratingStackView.addArrangedSubview(starRatingView)
+    }
+    
+    private func setConstraints() {
         let thumbnailWidth: CGFloat = 120 // 이미지의 고정된 너비
         let thumbnailHeight: CGFloat = 160 // 이미지의 고정된 높이
-        
-        //       thumbnailImageView.contentMode = .scaleAspectFill // 이미지를 프레임에 맞춰 채우기
-        //        thumbnailImageView.frame = CGRect(x: 0, y: 0, width: thumbnailWidth, height: thumbnailHeight)
+
+     
         thumbnailImageView.clipsToBounds = true // 이미지를 프레임 내에서 자르기
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(thumbnailImageView)
         // 다른 뷰들의 제약 조건도 수정해야 합니다.
         let margin: CGFloat = 10
+       
         
-        // 다른 뷰들의 제약 조건 수정
-        NSLayoutConstraint.activate([
-            thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            thumbnailImageView.widthAnchor.constraint(equalToConstant: thumbnailWidth),
-            thumbnailImageView.heightAnchor.constraint(equalToConstant: thumbnailHeight),
-            thumbnailImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            
-            
-            titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor),
-            titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: margin),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            
-            directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            directorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            directorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            
-            actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 5),
-            actorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            actorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            
-            ratingStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            ratingStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            
-        ])
-        if isRankVisible {
+        //contentView.bringSubviewToFront(rankImageView)
+        // titleLabel의 너비 제약 조건 설정
+//         titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+//         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+    
+        
+        thumbnailImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
+        thumbnailImageView.widthAnchor.constraint(equalToConstant: thumbnailWidth).isActive = true
+        thumbnailImageView.heightAnchor.constraint(equalToConstant: thumbnailHeight).isActive = true
+        thumbnailImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: margin).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -margin).isActive = true
+        
+        directorLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5).isActive = true
+        directorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
+        directorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
+        
+        actorLabel.topAnchor.constraint(equalTo: directorLabel.bottomAnchor, constant: 5).isActive = true
+        actorLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
+        actorLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor).isActive = true
+
+        ratingStackView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
+        ratingStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -margin).isActive = true
+      if isRankVisible {
             NSLayoutConstraint.activate([
                 
                 rankBackgroundView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 5),
@@ -149,10 +181,7 @@ class TableViewCell: UITableViewCell {
             ])
             contentView.bringSubviewToFront(rankBackgroundView)
         }
-        //contentView.bringSubviewToFront(rankImageView)
-        // titleLabel의 너비 제약 조건 설정
-        titleLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
     }
     
     // 초기화 메서드

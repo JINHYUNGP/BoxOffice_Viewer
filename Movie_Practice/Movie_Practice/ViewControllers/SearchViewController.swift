@@ -59,18 +59,6 @@ class SearchViewController: UIViewController, UITableViewDelegate {
             tableView.trailingAnchor.constraint(equalTo: guide.trailingAnchor)
         ])
     }
-    
-    
-    /*
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     // Get the new view controller using segue.destination.
-     // Pass the selected object to the new view controller.
-     }
-     */
-    
 }
 
 extension SearchViewController: UITableViewDataSource {
@@ -116,15 +104,12 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        print("function is calling")
-        //
+
         let lastRowIndex = tableView.numberOfRows(inSection: 0) - 1
         guard let searchText = searchBar.text else {
             return
         }
-        print("im here")
-        print("currentStartCount + 10", movieManager.currentStartCount + 10 )
-        print("maxcount", movieManager.maxCount)
+
         if indexPath.row == lastRowIndex && movieManager.currentStartCount + 10 < movieManager.maxCount {
             movieManager.currentStartCount += 10
             
@@ -161,9 +146,7 @@ extension SearchViewController: UISearchResultsUpdating {
                 self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
             }
         }
-        
     }
-    
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -174,13 +157,11 @@ extension SearchViewController: UISearchBarDelegate {
         movieManager.setCurrentStartCountZero()
         movieManager.fetchAllMovies(with: searchText) { [weak self] movies in
             
-            self?.movies = movies ?? [Movie()]
+            self?.movies = movies ?? []
             
             DispatchQueue.main.async {
                 self?.tableView.reloadData() // 테이블 뷰 업데이트 예시
             }
         }
     }
-    
-    
 }
