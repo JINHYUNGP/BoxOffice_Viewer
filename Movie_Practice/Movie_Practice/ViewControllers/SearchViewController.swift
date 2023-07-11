@@ -81,7 +81,12 @@ extension SearchViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
-
+        
+        // 인덱스 범위 체크
+        guard indexPath.row < movies.count else {
+            return cell
+        }
+        
         if cell.starRatingView.superview != nil {
             cell.starRatingView.removeFromSuperview()
         }
